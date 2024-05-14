@@ -18,7 +18,7 @@ router
   .delete(auth('basic'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
-  .route('/verify1/:userId')
+  .route('/verify/:userId')
   .patch(auth('master'), validate(userValidation.verifyUserRole), userController.verifyUserRole);
 
 module.exports = router;
