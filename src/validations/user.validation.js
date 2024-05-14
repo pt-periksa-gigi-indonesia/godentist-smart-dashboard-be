@@ -36,7 +36,6 @@ const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
-      role: Joi.string().valid(...roles),
     })
     .min(1),
 };
@@ -47,10 +46,20 @@ const deleteUser = {
   }),
 };
 
+const verifyUserRole = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    role: Joi.string().valid(...roles),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  verifyUserRole,
 };
