@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const feedbackSchema = mongoose.Schema({
   id: Number,
   name: String,
-  feedBackDoctor: Array,
+  feedBackDoctor: mongoose.Schema.Types.Mixed,
 });
 
 /**
