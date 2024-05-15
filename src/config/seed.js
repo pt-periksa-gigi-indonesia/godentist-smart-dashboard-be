@@ -6,19 +6,29 @@ async function seedDatabase() {
   try {
     const data = await fetchDataFromEndpoints();
 
-    // Clear existing collections
-    await Doctor.deleteMany({});
-    await Feedback.deleteMany({});
-    await Profile.deleteMany({});
-    await ClinicHistory.deleteMany({});
-    await ConsultationHistory.deleteMany({});
+    // Prepare promises for clearing existing collections
+    const deleteOperations = [
+      Doctor.deleteMany({}),
+      Feedback.deleteMany({}),
+      Profile.deleteMany({}),
+      ClinicHistory.deleteMany({}),
+      ConsultationHistory.deleteMany({}),
+    ];
 
-    // Insert documents into collections
-    await Doctor.insertMany(data.doctors);
-    await Feedback.insertMany(data.feedbacks);
-    await Profile.insertMany(data.profiles);
-    await ClinicHistory.insertMany(data.clinicHistories);
-    await ConsultationHistory.insertMany(data.consultationHistories);
+    // Wait for all delete operations to complete
+    await Promise.all(deleteOperations);
+
+    // Prepare promises for inserting documents into collections
+    const insertOperations = [
+      Doctor.insertMany(data.doctors),
+      Feedback.insertMany(data.feedbacks),
+      Profile.insertMany(data.profiles),
+      ClinicHistory.insertMany(data.clinicHistories),
+      ConsultationHistory.insertMany(data.consultationHistories),
+    ];
+
+    // Wait for all insert operations to complete
+    await Promise.all(insertOperations);
 
     logger.info('Database seeded');
   } catch (error) {
