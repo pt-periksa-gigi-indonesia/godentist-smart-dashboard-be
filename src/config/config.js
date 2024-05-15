@@ -15,6 +15,8 @@ const envVarsSchema = Joi.object()
     API_PROFILE_URL: Joi.string().required().description('Profile API url'),
     API_CLINIC_URL: Joi.string().required().description('Clinic API url'),
     API_CONSULTATION_URL: Joi.string().required().description('Consultation API url'),
+    API_CLINIC_FEEDBACK_URL: Joi.string().required().description('Clinic Feedback API url'),
+    API_VERIFY_DOCTOR_URL: Joi.string().required().description('Verify Doctor API url'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
@@ -56,6 +58,8 @@ module.exports = {
     profile: envVars.API_PROFILE_URL,
     clinic: envVars.API_CLINIC_URL,
     consultation: envVars.API_CONSULTATION_URL,
+    clinicFeedback: envVars.API_CLINIC_FEEDBACK_URL,
+    verifyDoctor: envVars.API_VERIFY_DOCTOR_URL,
   },
   jwt: {
     secret: envVars.JWT_SECRET,
