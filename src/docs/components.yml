@@ -39,6 +39,15 @@ components:
         refresh:
           $ref: '#/components/schemas/Token'
 
+    Seed:
+      type: object
+      properties:
+        massage:
+          type: string
+      example:
+        massage: Database successfully seeded
+
+
     Error:
       type: object
       properties:
@@ -84,6 +93,15 @@ components:
           example:
             code: 404
             message: Not found
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 500
+            message: Internal server error
 
   securitySchemes:
     bearerAuth:

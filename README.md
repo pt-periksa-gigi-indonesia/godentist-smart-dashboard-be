@@ -1,37 +1,14 @@
-# RESTful API Node Server Boilerplate
+# Backend PWA System
+This project is the backend component of the Progressive Web Application (PWA) dashboard developed for Godentis. The backend system is designed to handle all server-side logic, database interactions, and API integrations required for the PWA dashboard to function effectively.
 
-[![Build Status](https://travis-ci.org/hagopj13/node-express-boilerplate.svg?branch=master)](https://travis-ci.org/hagopj13/node-express-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/hagopj13/node-express-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/hagopj13/node-express-boilerplate?branch=master)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-A boilerplate/starter project for quickly building RESTful APIs using Node.js, Express, and Mongoose.
-
-By running a single command, you will get a production-ready Node.js app installed and fully configured on your machine. The app comes with many built-in features, such as authentication using JWT, request validation, unit and integration tests, continuous integration, docker support, API documentation, pagination, etc. For more details, check the features list below.
-
-## Quick Start
-
-To create a project, simply run:
-
-```bash
-npx create-nodejs-express-app <project-name>
-```
-
-Or
-
-```bash
-npm init nodejs-express-app <project-name>
-```
-
-## Manual Installation
+## Installation
 
 If you would still prefer to do the installation manually, follow these steps:
 
 Clone the repo:
 
 ```bash
-git clone --depth 1 https://github.com/hagopj13/node-express-boilerplate.git
-cd node-express-boilerplate
-npx rimraf ./.git
+git clone https://github.com/pt-periksa-gigi-indonesia/godentist-smart-dashboard-be.git
 ```
 
 Install the dependencies:
@@ -55,14 +32,7 @@ cp .env.example .env
 - [Environment Variables](#environment-variables)
 - [Project Structure](#project-structure)
 - [API Documentation](#api-documentation)
-- [Error Handling](#error-handling)
-- [Validation](#validation)
-- [Authentication](#authentication)
-- [Authorization](#authorization)
-- [Logging](#logging)
-- [Custom Mongoose Plugins](#custom-mongoose-plugins)
 - [Linting](#linting)
-- [Contributing](#contributing)
 
 ## Features
 
@@ -155,6 +125,17 @@ PORT=3000
 # URL of the Mongo DB
 MONGODB_URL=mongodb://127.0.0.1:27017/node-boilerplate
 
+# API keys and secrets
+API_KEY='your_api_key_here'
+
+# HTTP API
+# Base URL for the API
+API_DOCTOR_URL='api_doctor_url_here'
+API_FEEDBACK_URL='api_feedback_url_here'
+API_PROFILE_URL='api_profile_url_here'
+API_CLINIC_URL='api_clinic_url_here'
+API_CONSULTATION_URL='api_consultation_url_here'
+
 # JWT
 # JWT secret key
 JWT_SECRET=thisisasamplesecret
@@ -162,6 +143,10 @@ JWT_SECRET=thisisasamplesecret
 JWT_ACCESS_EXPIRATION_MINUTES=30
 # Number of days after which a refresh token expires
 JWT_REFRESH_EXPIRATION_DAYS=30
+# Number of minutes after which a reset password token expires
+JWT_RESET_PASSWORD_EXPIRATION_MINUTES=10
+# Number of minutes after which a verify email token expires
+JWT_VERIFY_EMAIL_EXPIRATION_MINUTES=10
 
 # SMTP configuration options for the email service
 # For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
@@ -191,250 +176,362 @@ src\
 
 ## API Documentation
 
-To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
+**Base URL:**
+> https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/
+
+In this section there is a Collection API for this project that can be used to be main foundation of our dashboard. Response from each URL using JSON format. For further documentation and parameter can be used for each endpoint, please seek for this link [Swagger API Documentation](https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/docs)
 
 ### API Endpoints
 
 List of available routes:
 
-**Auth routes**:\
-`POST /v1/auth/register` - register\
-`POST /v1/auth/login` - login\
-`POST /v1/auth/refresh-tokens` - refresh auth tokens\
-`POST /v1/auth/forgot-password` - send reset password email\
-`POST /v1/auth/reset-password` - reset password\
-`POST /v1/auth/send-verification-email` - send verification email\
-`POST /v1/auth/verify-email` - verify email
+- #### **Auth routes:**
+    ***Register :***\
+    `POST /v1/auth/register`
+
+    - <details markdown=span>
+
+        <summary markdown=span><b>Request Body</b></summary>
+
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | name | `string` | **required** |
+        | email | `string` | **required** |
+        | password | `string` | **required** |
+
+        </details><br>
+
+    - *Response :* 
+    ```JSON
+    {
+    "user": {
+        "id": "5ebac534954b54139806c112",
+        "email": "test@example.com",
+        "name": "test name",
+        "role": "user"
+    },
+    "tokens": {
+        "access": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+        },
+        "refresh": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+        }
+    }
+    }
+    ```
+
+    ***Login :***\
+    `POST /v1/auth/login` 
+
+    - <details markdown=span>
+
+        <summary markdown=span><b>Request Body</b></summary>
+
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | email | `string` | **required** |
+        | password | `string` | **required** |
+
+        </details><br>
+
+    - *Response :* 
+    ```JSON
+    {
+    "user": {
+        "id": "5ebac534954b54139806c112",
+        "email": "test@example.com",
+        "name": "test name",
+        "role": "user"
+    },
+    "tokens": {
+        "access": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+        },
+        "refresh": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+        }
+    }
+    }
+    ```
 
-**User routes**:\
-`POST /v1/users` - create a user\
-`GET /v1/users` - get all users\
-`GET /v1/users/:userId` - get user\
-`PATCH /v1/users/:userId` - update user\
-`DELETE /v1/users/:userId` - delete user
+    ***Logout :***\
+    `POST /v1/auth/logout` 
 
-## Error Handling
+    - <details markdown=span>
 
-The app has a centralized error handling mechanism.
+        <summary markdown=span><b>Request Body</b></summary>
 
-Controllers should try to catch the errors and forward them to the error handling middleware (by calling `next(error)`). For convenience, you can also wrap the controller inside the catchAsync utility wrapper, which forwards the error.
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | refreshToken | `string` | **required** |
 
-```javascript
-const catchAsync = require('../utils/catchAsync');
+        </details><br>
 
-const controller = catchAsync(async (req, res) => {
-  // this error will be forwarded to the error handling middleware
-  throw new Error('Something wrong happened');
-});
-```
+    ***Refresh Auth Tokens :***\
+    `POST /v1/auth/refresh-tokens`
 
-The error handling middleware sends an error response, which has the following format:
+    - <details markdown=span>
 
-```json
-{
-  "code": 404,
-  "message": "Not found"
-}
-```
+        <summary markdown=span><b>Request Body</b></summary>
 
-When running in development mode, the error response also contains the error stack.
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | refreshToken | `string` | **required** |
 
-The app has a utility ApiError class to which you can attach a response code and a message, and then throw it from anywhere (catchAsync will catch it).
+        </details><br>
 
-For example, if you are trying to get a user from the DB who is not found, and you want to send a 404 error, the code should look something like:
+    - *Response :* 
+    ```JSON
+    {
+    "access": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+    },
+    "refresh": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg",
+        "expires": "2020-05-12T16:18:04.793Z"
+    }
+    }
+    ```
 
-```javascript
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const User = require('../models/User');
+    ***Forgot Password :***\
+    `POST /v1/auth/forgot-password`
 
-const getUser = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-};
-```
+    - <details markdown=span>
 
-## Validation
+        <summary markdown=span><b>Parameter</b></summary>
 
-Request data is validated using [Joi](https://joi.dev/). Check the [documentation](https://joi.dev/api/) for more details on how to write Joi validation schemas.
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | token | `string` | **required** | The reset password token |
 
-The validation schemas are defined in the `src/validations` directory and are used in the routes by providing them as parameters to the `validate` middleware.
+        </details><br>
 
-```javascript
-const express = require('express');
-const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+    - <details markdown=span>
 
-const router = express.Router();
+        <summary markdown=span><b>Request Body</b></summary>
 
-router.post('/users', validate(userValidation.createUser), userController.createUser);
-```
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | refreshToken | `string` | **required** |
 
-## Authentication
+        </details><br>
 
-To require authentication for certain routes, you can use the `auth` middleware.
+    ***Reset Password :***\
+    `POST /v1/auth/reset-password`
 
-```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/user.controller');
+    - <details markdown=span>
+
+        <summary markdown=span><b>Request Body</b></summary>
 
-const router = express.Router();
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | password | `string` | **required** |
 
-router.post('/users', auth(), userController.createUser);
-```
+        </details><br>
 
-These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
+    ***Send Verification Email :***\
+    `POST /v1/auth/send-verification-email`
 
-**Generating Access Tokens**:
+    ***Verify Email :***\
+    `POST /v1/auth/verify-email`
 
-An access token can be generated by making a successful call to the register (`POST /v1/auth/register`) or login (`POST /v1/auth/login`) endpoints. The response of these endpoints also contains refresh tokens (explained below).
+    - <details markdown=span>
+
+        <summary markdown=span><b>Parameter</b></summary>
+
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | token | `string` | **required** | The verify email token |
+
+        </details><br>
+
+- #### **Seed routes:**
+    ***Refresh Database with Seeding Data :***\
+    `GET /v1/seed`
+
+    - *Response :* 
+    ```JSON
+    {
+    "massage": "Database successfully seeded"
+    }
+    ```
 
-An access token is valid for 30 minutes. You can modify this expiration time by changing the `JWT_ACCESS_EXPIRATION_MINUTES` environment variable in the .env file.
+- #### **User routes:**
+    ***Create a User :***\
+    `POST /v1/users`
 
-**Refreshing Access Tokens**:
+    - <details markdown=span>
 
-After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (`POST /v1/auth/refresh-tokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
+        <summary markdown=span><b>Request Body</b></summary>
 
-A refresh token is valid for 30 days. You can modify this expiration time by changing the `JWT_REFRESH_EXPIRATION_DAYS` environment variable in the .env file.
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | name | `string` | **required** |
+        | email | `string` | **required** |
+        | password | `string` | **required** |
+        | role | `string` | **required** |
 
-## Authorization
+        </details><br>
+
+    - *Response :* 
+    ```JSON
+    {
+    "id": "5ebac534954b54139806c112",
+    "email": "test@example.com",
+    "name": "test name",
+    "role": "user"
+    }
+    ```
 
-The `auth` middleware can also be used to require certain rights/permissions to access a route.
+    ***Get All Users :***\
+    `GET /v1/users`
 
-```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/user.controller');
+    - <details markdown=span>
 
-const router = express.Router();
+        <summary markdown=span><b>Parameter</b></summary>
 
-router.post('/users', auth('manageUsers'), userController.createUser);
-```
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | name | `string` | **optional** | Filter users by name |
+        | role | `string` | **optional** | Filter users by role |
+        | sortBy | `string` | **optional** | Sort users by a specific field |
+        | limit | `integer` | **optional** | Maximum number of users to retrieve |
+        | page | `integer` | **optional** | Page number |
 
-In the example above, an authenticated user can access this route only if that user has the `manageUsers` permission.
+        </details><br>
 
-The permissions are role-based. You can view the permissions/rights of each role in the `src/config/roles.js` file.
+    - *Response :* 
+    ```JSON
+    {
+    "results": [
+        {
+        "id": "5ebac534954b54139806c112",
+        "email": "test@example.com",
+        "name": "test name",
+        "role": "user"
+        }
+    ],
+    "page": 1,
+    "limit": 10,
+    "totalPages": 1,
+    "totalResults": 1
+    }
+    ```
 
-If the user making the request does not have the required permissions to access this route, a Forbidden (403) error is thrown.
+    ***Get Users :***\
+    `GET /v1/users/:userId`
+    - <details markdown=span>
 
-## Logging
+        <summary markdown=span><b>Parameter</b></summary>
 
-Import the logger from `src/config/logger.js`. It is using the [Winston](https://github.com/winstonjs/winston) logging library.
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | userId | `string` | **required** | The user ID |
 
-Logging should be done according to the following severity levels (ascending order from most important to least important):
+        </details><br>
 
-```javascript
-const logger = require('<path to src>/config/logger');
+    - *Response :* 
+    ```JSON
+    {
+    "id": "5ebac534954b54139806c112",
+    "email": "test@example.com",
+    "name": "test name",
+    "role": "user"
+    }
+    ```
 
-logger.error('message'); // level 0
-logger.warn('message'); // level 1
-logger.info('message'); // level 2
-logger.http('message'); // level 3
-logger.verbose('message'); // level 4
-logger.debug('message'); // level 5
-```
+    ***Update Users :***\
+    `PATCH /v1/users/:userId`
+    - <details markdown=span>
 
-In development mode, log messages of all severity levels will be printed to the console.
+        <summary markdown=span><b>Parameter</b></summary>
 
-In production mode, only `info`, `warn`, and `error` logs will be printed to the console.\
-It is up to the server (or process manager) to actually read them from the console and store them in log files.\
-This app uses pm2 in production mode, which is already configured to store the logs in log files.
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | userId | `string` | **required** | The user ID |
 
-Note: API request information (request url, response code, timestamp, etc.) are also automatically logged (using [morgan](https://github.com/expressjs/morgan)).
+        </details><br>
 
-## Custom Mongoose Plugins
+    - <details markdown=span>
 
-The app also contains 2 custom mongoose plugins that you can attach to any mongoose model schema. You can find the plugins in `src/models/plugins`.
+        <summary markdown=span><b>Request Body</b></summary>
 
-```javascript
-const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | name | `string` | **optional** |
+        | email | `string` | **optional** |
+        | password | `string` | **optional** |
 
-const userSchema = mongoose.Schema(
-  {
-    /* schema definition here */
-  },
-  { timestamps: true }
-);
+        </details><br>
 
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
+    - *Response :* 
+    ```JSON
+    {
+    "id": "5ebac534954b54139806c112",
+    "email": "test@example.com",
+    "name": "test name",
+    "role": "user"
+    }
+    ```
 
-const User = mongoose.model('User', userSchema);
-```
+    ***Delete Users :***\
+    `DELETE /v1/users/:userId`
+    - <details markdown=span>
 
-### toJSON
+        <summary markdown=span><b>Parameter</b></summary>
 
-The toJSON plugin applies the following changes in the toJSON transform call:
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | userId | `string` | **required** | The user ID |
 
-- removes \_\_v, createdAt, updatedAt, and any schema path that has private: true
-- replaces \_id with id
+        </details><br>
 
-### paginate
+    ***Verify Users :***\
+    `PATCH /v1/users/verify/:userId`
+    - <details markdown=span>
 
-The paginate plugin adds the `paginate` static method to the mongoose schema.
+        <summary markdown=span><b>Parameter</b></summary>
 
-Adding this plugin to the `User` model schema will allow you to do the following:
+        | Fieldname | Type     | Necessity    | Description |
+        | --------- | -------- | ------------ | ----------- |
+        | userId | `string` | **required** | The user ID |
 
-```javascript
-const queryUsers = async (filter, options) => {
-  const users = await User.paginate(filter, options);
-  return users;
-};
-```
+        </details><br>
 
-The `filter` param is a regular mongo filter.
+    - <details markdown=span>
 
-The `options` param can have the following (optional) fields:
+        <summary markdown=span><b>Request Body</b></summary>
 
-```javascript
-const options = {
-  sortBy: 'name:desc', // sort order
-  limit: 5, // maximum results per page
-  page: 2, // page number
-};
-```
+        | Fieldname | Type     | Necessity    |
+        | --------- | -------- | ------------ |
+        | role | `string` | **required** |
 
-The plugin also supports sorting by multiple criteria (separated by a comma): `sortBy: name:desc,role:asc`
+        </details><br>
 
-The `paginate` method returns a Promise, which fulfills with an object having the following properties:
-
-```json
-{
-  "results": [],
-  "page": 2,
-  "limit": 5,
-  "totalPages": 10,
-  "totalResults": 48
-}
-```
+    - *Response :* 
+    ```JSON
+    {
+    "id": "5ebac534954b54139806c112",
+    "email": "test@example.com",
+    "name": "test name",
+    "role": "user"
+    }
+    ```
 
 ## Linting
 
 Linting is done using [ESLint](https://eslint.org/) and [Prettier](https://prettier.io).
 
-In this app, ESLint is configured to follow the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) with some modifications. It also extends [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) to turn off all rules that are unnecessary or might conflict with Prettier.
+In this repo, ESLint is configured to follow the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) with some modifications. It also extends [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) to turn off all rules that are unnecessary or might conflict with Prettier.
 
 To modify the ESLint configuration, update the `.eslintrc.json` file. To modify the Prettier configuration, update the `.prettierrc.json` file.
 
 To prevent a certain file or directory from being linted, add it to `.eslintignore` and `.prettierignore`.
 
 To maintain a consistent coding style across different IDEs, the project contains `.editorconfig`
-
-## Contributing
-
-Contributions are more than welcome! Please check out the [contributing guide](CONTRIBUTING.md).
-
-## Inspirations
-
-- [danielfsousa/express-rest-es2017-boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate)
-- [madhums/node-express-mongoose](https://github.com/madhums/node-express-mongoose)
-- [kunalkapadia/express-mongoose-es6-rest-api](https://github.com/kunalkapadia/express-mongoose-es6-rest-api)
-
-## License
-
-[MIT](LICENSE)

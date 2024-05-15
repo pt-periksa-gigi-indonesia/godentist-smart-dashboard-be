@@ -29,8 +29,10 @@ module.exports = router;
  * /auth/register:
  *   post:
  *     summary: Register as user
+ *     description: Create a new user account with the provided email, password, and name.
  *     tags: [Auth]
  *     requestBody:
+ *       description: User registration details
  *       required: true
  *       content:
  *         application/json:
@@ -43,22 +45,20 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The user's full name
+ *                 example: fake name
  *               email:
  *                 type: string
  *                 format: email
- *                 description: must be unique
+ *                 description: The user's email address, must be unique
+ *                 example: fake@example.com
  *               password:
  *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
- *             example:
- *               name: fake name
- *               email: fake@example.com
- *               password: password1
+ *                 description: The user's password. Must be at least 8 characters long, containing at least one number and one letter.
+ *                 example: password1
  *     responses:
  *       "201":
- *         description: Created
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -77,8 +77,10 @@ module.exports = router;
  * /auth/login:
  *   post:
  *     summary: Login
+ *     description: Authenticate a user with their email and password.
  *     tags: [Auth]
  *     requestBody:
+ *       description: User login details
  *       required: true
  *       content:
  *         application/json:
@@ -91,15 +93,15 @@ module.exports = router;
  *               email:
  *                 type: string
  *                 format: email
+ *                 description: The user's email address
+ *                 example: fake@example.com
  *               password:
  *                 type: string
- *                 format: password
- *             example:
- *               email: fake@example.com
- *               password: password1
+ *                 description: The user's password
+ *                 example: password1
  *     responses:
  *       "200":
- *         description: OK
+ *         description: User authenticated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -125,8 +127,10 @@ module.exports = router;
  * /auth/logout:
  *   post:
  *     summary: Logout
+ *     description: Log out the user by invalidating the refresh token.
  *     tags: [Auth]
  *     requestBody:
+ *       description: Refresh token to invalidate
  *       required: true
  *       content:
  *         application/json:
@@ -137,11 +141,11 @@ module.exports = router;
  *             properties:
  *               refreshToken:
  *                 type: string
- *             example:
- *               refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+ *                 description: The refresh token to be invalidated
+ *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
  *     responses:
  *       "204":
- *         description: No content
+ *         description: No content, logout successful
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
@@ -151,8 +155,10 @@ module.exports = router;
  * /auth/refresh-tokens:
  *   post:
  *     summary: Refresh auth tokens
+ *     description: Obtain new access and refresh tokens using the provided refresh token.
  *     tags: [Auth]
  *     requestBody:
+ *       description: Refresh token for obtaining new tokens
  *       required: true
  *       content:
  *         application/json:
@@ -163,11 +169,11 @@ module.exports = router;
  *             properties:
  *               refreshToken:
  *                 type: string
- *             example:
- *               refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+ *                 description: The refresh token used to obtain new access and refresh tokens
+ *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
  *     responses:
  *       "200":
- *         description: OK
+ *         description: Tokens refreshed successfully
  *         content:
  *           application/json:
  *             schema:
@@ -181,9 +187,10 @@ module.exports = router;
  * /auth/forgot-password:
  *   post:
  *     summary: Forgot password
- *     description: An email will be sent to reset password.
+ *     description: An email will be sent to the provided email address with instructions to reset the password.
  *     tags: [Auth]
  *     requestBody:
+ *       description: Email address for password reset
  *       required: true
  *       content:
  *         application/json:
@@ -195,11 +202,11 @@ module.exports = router;
  *               email:
  *                 type: string
  *                 format: email
- *             example:
- *               email: fake@example.com
+ *                 description: The user's email address
+ *                 example: fake@example.com
  *     responses:
  *       "204":
- *         description: No content
+ *         description: No content, password reset email sent
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
@@ -209,6 +216,7 @@ module.exports = router;
  * /auth/reset-password:
  *   post:
  *     summary: Reset password
+ *     description: Reset the user's password using the provided token and new password.
  *     tags: [Auth]
  *     parameters:
  *       - in: query
@@ -218,6 +226,7 @@ module.exports = router;
  *           type: string
  *         description: The reset password token
  *     requestBody:
+ *       description: New password details
  *       required: true
  *       content:
  *         application/json:
@@ -228,14 +237,11 @@ module.exports = router;
  *             properties:
  *               password:
  *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
- *             example:
- *               password: password1
+ *                 description: The new password. Must be at least 8 characters long, containing at least one number and one letter.
+ *                 example: password1
  *     responses:
  *       "204":
- *         description: No content
+ *         description: No content, password reset successful
  *       "401":
  *         description: Password reset failed
  *         content:
@@ -252,13 +258,13 @@ module.exports = router;
  * /auth/send-verification-email:
  *   post:
  *     summary: Send verification email
- *     description: An email will be sent to verify email.
+ *     description: An email will be sent to the user to verify their email address.
  *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       "204":
- *         description: No content
+ *         description: No content, verification email sent
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  */
@@ -267,7 +273,8 @@ module.exports = router;
  * @swagger
  * /auth/verify-email:
  *   post:
- *     summary: verify email
+ *     summary: Verify email
+ *     description: Verify the user's email address using the provided token.
  *     tags: [Auth]
  *     parameters:
  *       - in: query
@@ -278,14 +285,14 @@ module.exports = router;
  *         description: The verify email token
  *     responses:
  *       "204":
- *         description: No content
+ *         description: No content, email verification successful
  *       "401":
- *         description: verify email failed
+ *         description: Email verification failed
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *             example:
  *               code: 401
- *               message: verify email failed
+ *               message: Email verification failed
  */
