@@ -3,8 +3,6 @@ This project is the backend component of the Progressive Web Application (PWA) d
 
 ## Installation
 
-If you would still prefer to do the installation manually, follow these steps:
-
 Clone the repo:
 
 ```bash
@@ -179,7 +177,7 @@ src\
 **Base URL:**
 > https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/
 
-In this section there is a Collection API for this project that can be used to be main foundation of our dashboard. Response from each URL using JSON format. For further documentation and parameter can be used for each endpoint, please seek for this link [Swagger API Documentation](https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/docs)
+In this section there is a Collection API for this project that can be used to be main foundation of our dashboard. Response from each URL using JSON format. For further documentation and parameter can be used for each endpoint, please seek for this link [Swagger API Documentation](https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/docs) and if you running this project locally, you can access documentation in ```http://localhost:3000/v1/docs/```
 
 ### API Endpoints
 
