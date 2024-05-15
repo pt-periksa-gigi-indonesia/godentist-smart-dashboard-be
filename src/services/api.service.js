@@ -1,8 +1,7 @@
 const axios = require('axios');
 const { api } = require('../config/config');
 
-// Define your endpoints
-const endpoints = [api.doctor, api.feedback, api.profile, api.clinic, api.consultation];
+const endpoints = [api.doctor, api.feedback, api.profile, api.clinic, api.consultation, api.clinicFeedback];
 
 const axiosInstance = axios.create({
   headers: {
@@ -17,7 +16,7 @@ async function fetchDataFromEndpoints() {
     const results = await Promise.all(endpoints.map((endpoint) => axiosInstance.get(endpoint)));
 
     // Extract data from the axios responses
-    const [doctors, feedbacks, profiles, clinicHistories, consultationHistories] = results.map(
+    const [doctors, feedbacks, profiles, clinicHistories, consultationHistories, clinicFeedbacks] = results.map(
       (response) => response.data.data
     );
 
@@ -27,6 +26,7 @@ async function fetchDataFromEndpoints() {
       profiles,
       clinicHistories,
       consultationHistories,
+      clinicFeedbacks,
     };
 
     return allData;

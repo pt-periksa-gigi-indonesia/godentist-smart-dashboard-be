@@ -1,5 +1,5 @@
 const { fetchDataFromEndpoints } = require('../services/api.service');
-const { Doctor, Feedback, Profile, ClinicHistory, ConsultationHistory } = require('../models');
+const { Doctor, Feedback, Profile, ClinicHistory, ConsultationHistory, ClinicFeedback } = require('../models');
 const logger = require('./logger');
 
 async function seedDatabase() {
@@ -13,6 +13,7 @@ async function seedDatabase() {
       Profile.deleteMany({}),
       ClinicHistory.deleteMany({}),
       ConsultationHistory.deleteMany({}),
+      ClinicFeedback.deleteMany({}),
     ];
 
     // Wait for all delete operations to complete
@@ -25,6 +26,7 @@ async function seedDatabase() {
       Profile.insertMany(data.profiles),
       ClinicHistory.insertMany(data.clinicHistories),
       ConsultationHistory.insertMany(data.consultationHistories),
+      ClinicFeedback.insertMany(data.clinicFeedbacks),
     ];
 
     // Wait for all insert operations to complete
