@@ -12,7 +12,7 @@ const swaggerDef = {
   },
   servers: [
     {
-      url: `http://localhost:3000/v1`,
+      url: `https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1`,
     },
   ],
 };
