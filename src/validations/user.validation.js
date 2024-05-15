@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
+const { roles } = require('../config/roles');
 
 const createUser = {
   body: Joi.object().keys({
@@ -45,10 +46,20 @@ const deleteUser = {
   }),
 };
 
+const verifyUserRole = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    role: Joi.string().valid(...roles),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
+  verifyUserRole,
 };
