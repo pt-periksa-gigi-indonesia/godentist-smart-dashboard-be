@@ -6,7 +6,7 @@ const catchAsync = require('../utils/catchAsync');
 const { doctorService } = require('../services');
 const { api } = require('../config/config');
 
-const queryDoctors = catchAsync(async (req, res) => {
+const getDoctors = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'verificationStatus', 'id']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await doctorService.queryDoctors(filter, options);
@@ -36,7 +36,7 @@ const verifyDoctor = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  queryDoctors,
+  getDoctors,
   getDoctorById,
   verifyDoctor,
 };
