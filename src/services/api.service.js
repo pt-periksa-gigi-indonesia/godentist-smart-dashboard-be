@@ -16,14 +16,14 @@ async function fetchDataFromEndpoints() {
     const results = await Promise.all(endpoints.map((endpoint) => axiosInstance.get(endpoint)));
 
     // Extract data from the axios responses
-    const [doctors, feedbacks, profiles, clinicHistories, consultationHistories, clinicFeedbacks] = results.map(
+    const [doctors, doctorFeedbacks, doctorProfiles, clinicHistories, consultationHistories, clinicFeedbacks] = results.map(
       (response) => response.data.data
     );
 
     const allData = {
       doctors,
-      feedbacks,
-      profiles,
+      doctorFeedbacks,
+      doctorProfiles,
       clinicHistories,
       consultationHistories,
       clinicFeedbacks,
@@ -34,4 +34,6 @@ async function fetchDataFromEndpoints() {
     return null;
   }
 }
-module.exports = { fetchDataFromEndpoints };
+module.exports = {
+  fetchDataFromEndpoints,
+};

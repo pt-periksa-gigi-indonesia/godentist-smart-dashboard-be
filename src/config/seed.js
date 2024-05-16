@@ -1,5 +1,5 @@
 const { fetchDataFromEndpoints } = require('../services/api.service');
-const { Doctor, Feedback, Profile, ClinicHistory, ConsultationHistory, ClinicFeedback } = require('../models');
+const { Doctor, DoctorFeedback, DoctorProfile, ClinicHistory, ConsultationHistory, ClinicFeedback } = require('../models');
 const logger = require('./logger');
 
 async function seedDatabase() {
@@ -9,8 +9,8 @@ async function seedDatabase() {
     // Prepare promises for clearing existing collections
     const deleteOperations = [
       Doctor.deleteMany({}),
-      Feedback.deleteMany({}),
-      Profile.deleteMany({}),
+      DoctorFeedback.deleteMany({}),
+      DoctorProfile.deleteMany({}),
       ClinicHistory.deleteMany({}),
       ConsultationHistory.deleteMany({}),
       ClinicFeedback.deleteMany({}),
@@ -22,8 +22,8 @@ async function seedDatabase() {
     // Prepare promises for inserting documents into collections
     const insertOperations = [
       Doctor.insertMany(data.doctors),
-      Feedback.insertMany(data.feedbacks),
-      Profile.insertMany(data.profiles),
+      DoctorFeedback.insertMany(data.doctorFeedbacks),
+      DoctorProfile.insertMany(data.doctorProfiles),
       ClinicHistory.insertMany(data.clinicHistories),
       ConsultationHistory.insertMany(data.consultationHistories),
       ClinicFeedback.insertMany(data.clinicFeedbacks),
