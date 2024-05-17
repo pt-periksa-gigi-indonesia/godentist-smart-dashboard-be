@@ -47,6 +47,130 @@ components:
       example:
         massage: Database successfully seeded
 
+    Doctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "drg. John"
+        specialization:
+          type: string
+          example: "Ortodontis"
+        workPlace:
+          type: string
+          example: "RS. Ibnu Sina"
+        consultationPrice:
+          type: string
+          example: "15000"
+        DoctorWorkSchedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorWorkSchedule'
+        DoctorExperience:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorExperience'
+        feedback:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feedback'
+        cardUrl:
+          type: string
+          example: "https://storage.googleapis.com/godentist-dev/doctor/doctor-idcard-Fri May 10 2024 06:33:30 GMT+0000 (Coordinated Universal Time)"
+        verificationStatus:
+          type: string
+          example: "verified"
+        clinicPatientsCount:
+          type: integer
+          example: 0
+        consultationPatientsCount:
+          type: integer
+          example: 22
+        totalAmountFromClinic:
+          type: integer
+          example: 0
+        totalAmountFromConsultation:
+          type: integer
+          example: 352000
+
+    DoctorWorkSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        fromHour:
+          type: string
+          example: "08:00"
+        untilHour:
+          type: string
+          example: "23:00"
+        fromDay:
+          type: string
+          example: "Senin"
+        untilDay:
+          type: string
+          example: "Kamis"
+        description:
+          type: string
+          example: "Konsultasi Online"
+        status:
+          type: string
+          example: "Online"
+
+    DoctorExperience:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fromYear:
+          type: string
+          format: date-time
+          example: "2000-01-01T00:00:00.000Z"
+        description:
+          type: string
+          example: "RS. Djoko Diningrat"
+
+    Feedback:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        message:
+          type: string
+          example: "ini feedback pertama dr john doe"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-05-14T13:30:12.636Z"
+
+    verifyDoctor:
+      type: object
+      properties:
+        verificationStatus:
+          type: string
+          example: "verified"
+
+    getDoctor:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "drg. John"
+        verificationStatus:
+          type: string
+          example: "verified"
+        detailDoctorURL:
+          type: string
+          example: "http://localhost:3000/api/v1/doctors/1"
 
     Error:
       type: object
