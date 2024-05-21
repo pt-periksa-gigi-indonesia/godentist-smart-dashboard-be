@@ -3,14 +3,14 @@ const catchAsync = require('../utils/catchAsync');
 const { feedbackService } = require('../services');
 
 const getClinicFeedbacks = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'id']);
+  const filter = pick(req.query, ['name', 'id', 'createdAt', 'feedback']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await feedbackService.queryClinicFeedbacks(filter, options);
   res.send(result);
 });
 
 const getDoctorFeedbacks = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'id']);
+  const filter = pick(req.query, ['name', 'id', 'createdAt', 'feedback']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await feedbackService.queryDoctorFeedbacks(filter, options);
   res.send(result);

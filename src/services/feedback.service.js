@@ -14,11 +14,20 @@ const ApiError = require('../utils/ApiError');
 const queryClinicFeedbacks = async (filter, options) => {
   const pipeline = [
     {
+      $unwind: '$FeedBackClinic',
+    },
+    {
       $project: {
         _id: 0,
         id: 1,
-        name: 1,
-        FeedBackClinic: 1,
+        name: 2,
+        feedback: '$FeedBackClinic.message',
+        createdAt: '$FeedBackClinic.createdAt',
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
   ];
@@ -38,11 +47,20 @@ const queryClinicFeedbacks = async (filter, options) => {
 const queryDoctorFeedbacks = async (filter, options) => {
   const pipeline = [
     {
+      $unwind: '$feedBackDoctor',
+    },
+    {
       $project: {
         _id: 0,
         id: 1,
-        name: 1,
-        feedBackDoctor: 1,
+        name: 2,
+        feedback: '$feedBackDoctor.message',
+        createdAt: '$feedBackDoctor.createdAt',
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
   ];
@@ -64,11 +82,20 @@ const getClinicFeedbackById = async (id) => {
       },
     },
     {
+      $unwind: '$FeedBackClinic',
+    },
+    {
       $project: {
         _id: 0,
         id: 1,
-        name: 1,
-        feedBackDoctor: 1,
+        name: 2,
+        feedback: '$FeedBackClinic.message',
+        createdAt: '$FeedBackClinic.createdAt',
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
   ];
@@ -93,11 +120,20 @@ const getDoctorFeedbackById = async (id) => {
       },
     },
     {
+      $unwind: '$feedBackDoctor',
+    },
+    {
       $project: {
         _id: 0,
         id: 1,
-        name: 1,
-        feedBackDoctor: 1,
+        name: 2,
+        feedback: '$feedBackDoctor.message',
+        createdAt: '$feedBackDoctor.createdAt',
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
       },
     },
   ];
