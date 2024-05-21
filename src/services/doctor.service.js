@@ -44,7 +44,7 @@ const queryDoctors = async (filter, options) => {
 
 /**
  * Get doctor by id
- * @param {ObjectId} id
+ * @param {idDoctor} id
  * @returns {Promise<Doctor>}
  */
 const getDoctorById = async (id) => {
@@ -133,6 +133,12 @@ const getDoctorById = async (id) => {
   return doctor;
 };
 
+/**
+ * Verify doctor
+ * @param {idDoctor} id
+ * @param {string} verificationStatus
+ * @returns {Promise<Doctor>}
+ */
 const verifyDoctor = async (id, verificationStatus) => {
   const doctor = await DoctorProfile.findOne({ idDoctor: id });
   if (!doctor) {

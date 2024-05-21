@@ -22,6 +22,11 @@ const queryClinicHistories = async (filter, options) => {
   return clinicHistories;
 };
 
+/**
+ * Get clinic by id
+ * @param {idClinic} id
+ * @returns {Promise<Clinic>}
+ */
 const getClinicById = async (id) => {
   const idClinic = parseInt(id, 10);
   const pipeline = [
