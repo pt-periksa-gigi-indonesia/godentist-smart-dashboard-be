@@ -1,5 +1,8 @@
 const axios = require('axios');
+const httpStatus = require('http-status');
 const { api } = require('../config/config');
+const logger = require('../config/logger');
+const ApiError = require('../utils/ApiError');
 
 const endpoints = [api.doctor, api.feedback, api.profile, api.clinic, api.consultation, api.clinicFeedback];
 
@@ -28,10 +31,12 @@ async function fetchDataFromEndpoints() {
       consultationHistories,
       clinicFeedbacks,
     };
+    logger.info(allData);
 
     return allData;
   } catch (error) {
-    return null;
+    logger.error(error);
+    throw ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error fetching data from endpoints');
   }
 }
 module.exports = {
