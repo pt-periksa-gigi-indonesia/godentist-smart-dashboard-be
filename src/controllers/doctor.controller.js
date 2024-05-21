@@ -1,10 +1,6 @@
-const httpStatus = require('http-status');
-const axios = require('axios');
 const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { doctorService } = require('../services');
-const { api } = require('../config/config');
 
 const getDoctors = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'verificationStatus', 'id']);
@@ -15,24 +11,12 @@ const getDoctors = catchAsync(async (req, res) => {
 
 const getDoctorById = catchAsync(async (req, res) => {
   const doctor = await doctorService.getDoctorById(req.params.doctorId);
-  if (!doctor) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
-  }
   res.send(doctor);
 });
 
 const verifyDoctor = catchAsync(async (req, res) => {
-  const doctor = await doctorService.getDoctorById(req.params.doctorId);
-  if (!doctor) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
-  }
-  const doctorId = parseInt(req.params.doctorId, 10);
-  const { verificationStatus } = req.body;
-  const updateData = { verificationStatus };
-  const headers = { 'x-api-key': api.key };
-  const endpoint = `${api.verifyDoctor}/${doctorId}`;
-  await axios.put(endpoint, updateData, { headers });
-  res.send({ message: 'Doctor verification status updated' });
+  const doctor = await doctorService.verifyDoctor(req.params.doctorId, req.body.verificationStatus);
+  res.send({ message: 'Doctor verification status updated', doctor });
 });
 
 module.exports = {

@@ -1,4 +1,8 @@
-const { Doctor } = require('../models');
+const httpStatus = require('http-status');
+const axios = require('axios');
+const { Doctor, DoctorProfile } = require('../models');
+const ApiError = require('../utils/ApiError');
+const { api } = require('../config/config');
 
 /**
  * Query for doctors
@@ -28,9 +32,9 @@ const queryDoctors = async (filter, options) => {
         id: '$id',
         name: '$name',
         verificationStatus: '$profile.verificationStatus',
-        detailDoctorURL: {
-          $concat: ['http://localhost:3000/v1/doctors/', { $toString: '$id' }],
-        },
+        // detailDoctorURL: {
+        //   $concat: ['http://localhost:3000/v1/doctors/', { $toString: '$id' }],
+        // },
       },
     },
   ];
@@ -40,12 +44,12 @@ const queryDoctors = async (filter, options) => {
 
 /**
  * Get doctor by id
- * @param {ObjectId} id
+ * @param {idDoctor} id
  * @returns {Promise<Doctor>}
  */
 const getDoctorById = async (id) => {
   const doctorId = parseInt(id, 10);
-  return Doctor.aggregate([
+  const doctor = Doctor.aggregate([
     {
       $match: {
         id: doctorId,
@@ -123,9 +127,36 @@ const getDoctorById = async (id) => {
       },
     },
   ]);
+  if (!doctor || doctor.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
+  }
+  return doctor;
+};
+
+/**
+ * Verify doctor
+ * @param {idDoctor} id
+ * @param {string} verificationStatus
+ * @returns {Promise<Doctor>}
+ */
+const verifyDoctor = async (id, verificationStatus) => {
+  const doctor = await DoctorProfile.findOne({ idDoctor: id });
+  if (!doctor) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
+  }
+  doctor.verificationStatus = verificationStatus;
+  const idDoctor = parseInt(id, 10);
+  await doctor.save();
+  try {
+    await axios.put(`${api.verifyDoctor}/${idDoctor}`, { verificationStatus }, { headers: { 'x-api-key': api.key } });
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when verify doctor');
+  }
+  return doctor;
 };
 
 module.exports = {
   queryDoctors,
   getDoctorById,
+  verifyDoctor,
 };
