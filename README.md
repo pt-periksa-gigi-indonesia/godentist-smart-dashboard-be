@@ -48,10 +48,7 @@ cp .env.example .env
 - **Santizing**: sanitize request data against xss and query injection
 - **CORS**: Cross-Origin Resource-Sharing enabled using [cors](https://github.com/expressjs/cors)
 - **Compression**: gzip compression with [compression](https://github.com/expressjs/compression)
-- **CI**: continuous integration with [Travis CI](https://travis-ci.org)
 - **Docker support**
-- **Code coverage**: using [coveralls](https://coveralls.io)
-- **Code quality**: with [Codacy](https://www.codacy.com)
 - **Git hooks**: with [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged)
 - **Linting**: with [ESLint](https://eslint.org) and [Prettier](https://prettier.io)
 - **Editor config**: consistent editor configuration using [EditorConfig](https://editorconfig.org)
@@ -199,7 +196,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "user": {
@@ -222,7 +219,7 @@ List of available routes:
     ```
 
     ***Login :***\
-    `POST /v1/auth/login` 
+    `POST /v1/auth/login`
 
     - <details markdown=span>
 
@@ -235,7 +232,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "user": {
@@ -258,7 +255,7 @@ List of available routes:
     ```
 
     ***Logout :***\
-    `POST /v1/auth/logout` 
+    `POST /v1/auth/logout`
 
     - <details markdown=span>
 
@@ -283,7 +280,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "access": {
@@ -353,7 +350,7 @@ List of available routes:
     ***Refresh Database with Seeding Data :***\
     `GET /v1/seed`
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "massage": "Database successfully seeded"
@@ -377,7 +374,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "id": "5ebac534954b54139806c112",
@@ -404,7 +401,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "results": [
@@ -434,7 +431,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "id": "5ebac534954b54139806c112",
@@ -468,7 +465,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "id": "5ebac534954b54139806c112",
@@ -512,7 +509,7 @@ List of available routes:
 
         </details><br>
 
-    - *Response :* 
+    - *Response :*
     ```JSON
     {
     "id": "5ebac534954b54139806c112",
