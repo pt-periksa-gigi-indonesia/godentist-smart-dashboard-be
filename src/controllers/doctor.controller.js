@@ -15,7 +15,7 @@ const getDoctors = catchAsync(async (req, res) => {
 
 const getDoctorById = catchAsync(async (req, res) => {
   const doctor = await doctorService.getDoctorById(req.params.doctorId);
-  if (!doctor) {
+  if (!doctor || doctor.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
   }
   res.send(doctor);
@@ -23,7 +23,7 @@ const getDoctorById = catchAsync(async (req, res) => {
 
 const verifyDoctor = catchAsync(async (req, res) => {
   const doctor = await doctorService.getDoctorById(req.params.doctorId);
-  if (!doctor) {
+  if (!doctor || doctor.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
   }
   const doctorId = parseInt(req.params.doctorId, 10);

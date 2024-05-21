@@ -11,6 +11,12 @@ const getDoctors = {
   }),
 };
 
+const getDoctor = {
+  params: Joi.object().keys({
+    doctorId: Joi.string().required(),
+  }),
+};
+
 const verifyDoctor = {
   params: Joi.object().keys({
     doctorId: Joi.string().required(),
@@ -22,5 +28,6 @@ const verifyDoctor = {
 
 module.exports = {
   getDoctors,
+  getDoctor,
   verifyDoctor,
 };
