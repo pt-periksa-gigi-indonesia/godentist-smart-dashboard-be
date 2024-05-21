@@ -29,7 +29,10 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Seed'
+ *               properties:
+ *                 massage:
+ *                     type: string
+ *                     example: "Database successfully seeded"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "500":
