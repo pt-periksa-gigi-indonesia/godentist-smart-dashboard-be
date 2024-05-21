@@ -28,7 +28,8 @@ const paginate = (schema) => {
         sort[key] = order === 'desc' ? -1 : 1;
       });
     } else {
-      sort = { createdAt: 1 };
+      // sort = { createdAt: 1 };
+      sort = { id: 1 };
     }
 
     const limit = options.limit && parseInt(options.limit, 10) > 0 ? parseInt(options.limit, 10) : 10;
