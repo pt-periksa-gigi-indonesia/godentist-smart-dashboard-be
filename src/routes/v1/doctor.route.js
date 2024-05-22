@@ -76,7 +76,16 @@ module.exports = router;
  *                 doctors:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/getDoctor'
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "Dr. John Doe"
+ *                       verificationStatus:
+ *                         type: string
+ *                         example: "verified"
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -150,14 +159,20 @@ module.exports = router;
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/verifyDoctor'
+ *              properties:
+ *                 verificationStatus:
+ *                     type: string
+ *                     example: "verified"
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/verifyDoctor'
+ *               properties:
+ *                 massage:
+ *                     type: string
+ *                     example: "Doctor verification status updated"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
