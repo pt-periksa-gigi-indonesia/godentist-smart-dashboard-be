@@ -41,6 +41,18 @@ const queryUsers = async (filter, options) => {
     },
   ];
   const users = await User.paginate(pipeline, filter, options);
+  const rolesCount = await User.aggregate([
+    { $match: { role: { $in: ['user', 'admin'] } } },
+    { $group: { _id: '$role', count: { $sum: 1 } } },
+    {
+      $project: {
+        role: '$_id',
+        count: 1,
+        _id: 0,
+      },
+    },
+  ]);
+  users.rolesCount = rolesCount;
   return users;
 };
 
