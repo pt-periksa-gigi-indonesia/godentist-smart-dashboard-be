@@ -11,14 +11,78 @@ const { ClinicHistory, ClinicFeedback } = require('../models');
 const queryClinicHistories = async (filter, options) => {
   const pipeline = [
     {
+      $lookup: {
+        from: 'clinichistories',
+        localField: 'id',
+        foreignField: 'serviceDetails.idClinic',
+        as: 'transactions',
+      },
+    },
+    {
+      $unwind: {
+        path: '$transactions',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $unwind: {
+        path: '$transactions.midtransResponse.payment_amounts',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          id: '$id',
+          name: '$name',
+        },
+        totalAmountTransactions: {
+          $sum: { $toDouble: '$transactions.midtransResponse.payment_amounts.amount' },
+        },
+        totalTransactions: {
+          $sum: 1,
+        },
+      },
+    },
+    {
       $project: {
         _id: 0,
-        id: 1,
-        name: 1,
+        id: '$_id.id',
+        name: '$_id.name',
+        totalAmountTransactions: 1,
+        totalTransactions: 1,
       },
     },
   ];
   const clinicHistories = await ClinicFeedback.paginate(pipeline, filter, options);
+  const totalTransactions = await ClinicHistory.countDocuments();
+  const totalAmountTransactions = await ClinicHistory.aggregate([
+    {
+      $project: {
+        totalAmount: {
+          $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalAmount: {
+          $sum: {
+            $toDouble: '$totalAmount',
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalAmount: 1,
+      },
+    },
+  ]);
+  clinicHistories.totalTransactions = totalTransactions;
+  clinicHistories.totalAmountTransactions = totalAmountTransactions[0].totalAmount;
   return clinicHistories;
 };
 

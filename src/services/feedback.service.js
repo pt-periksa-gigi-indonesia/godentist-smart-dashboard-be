@@ -32,6 +32,8 @@ const queryClinicFeedbacks = async (filter, options) => {
     },
   ];
   const clinicFeedbacks = await ClinicFeedback.paginate(pipeline, filter, options);
+  const totalClinicFeedbacks = await ClinicFeedback.countDocuments();
+  clinicFeedbacks.totalClinicFeedbacks = totalClinicFeedbacks;
   return clinicFeedbacks;
 };
 
@@ -65,6 +67,8 @@ const queryDoctorFeedbacks = async (filter, options) => {
     },
   ];
   const doctorFeedbacks = await DoctorFeedback.paginate(pipeline, filter, options);
+  const totalDoctorFeedbacks = await DoctorFeedback.countDocuments();
+  doctorFeedbacks.totalDoctorFeedbacks = totalDoctorFeedbacks;
   return doctorFeedbacks;
 };
 
