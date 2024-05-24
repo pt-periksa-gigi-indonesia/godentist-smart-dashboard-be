@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { paginate } = require('./plugins');
 
 const clinicHistorySchema = mongoose.Schema({
   id: Number,
@@ -12,6 +13,8 @@ const clinicHistorySchema = mongoose.Schema({
   createdAt: Date,
   updatedAt: Date,
 });
+
+clinicHistorySchema.plugin(paginate);
 
 /**
  * @typedef clinicHistory

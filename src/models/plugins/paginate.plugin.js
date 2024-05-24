@@ -10,8 +10,9 @@ const paginate = (schema) => {
    * @property {number} totalResults - Total number of documents
    */
   /**
-   * Query for documents with pagination
-   * @param {Object} [filter] - Mongo filter
+   * Query for documents with pagination and aggregation pipeline
+   * @param {Array} aggregationPipeline - Aggregation pipeline stages
+   * @param {Object} filter - Mongo filter
    * @param {Object} [options] - Query options
    * @param {string} [options.sortBy] - Sorting criteria using the format: sortField:(desc|asc). Multiple sorting criteria should be separated by commas (,)
    * @param {string} [options.populate] - Populate data fields. Hierarchy of fields should be separated by (.). Multiple populating criteria should be separated by commas (,)
@@ -19,51 +20,55 @@ const paginate = (schema) => {
    * @param {number} [options.page] - Current page (default = 1)
    * @returns {Promise<QueryResult>}
    */
-  schema.statics.paginate = async function (filter, options) {
-    let sort = '';
+  schema.statics.paginate = async function (aggregationPipeline, filter, options) {
+    let sort = {};
     if (options.sortBy) {
-      const sortingCriteria = [];
       options.sortBy.split(',').forEach((sortOption) => {
         const [key, order] = sortOption.split(':');
-        sortingCriteria.push((order === 'desc' ? '-' : '') + key);
+        sort[key] = order === 'desc' ? -1 : 1;
       });
-      sort = sortingCriteria.join(' ');
     } else {
-      sort = 'createdAt';
+      // sort = { createdAt: 1 };
+      sort = { id: 1 };
     }
 
     const limit = options.limit && parseInt(options.limit, 10) > 0 ? parseInt(options.limit, 10) : 10;
     const page = options.page && parseInt(options.page, 10) > 0 ? parseInt(options.page, 10) : 1;
     const skip = (page - 1) * limit;
 
-    const countPromise = this.countDocuments(filter).exec();
-    let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
-
-    if (options.populate) {
-      options.populate.split(',').forEach((populateOption) => {
-        docsPromise = docsPromise.populate(
-          populateOption
-            .split('.')
-            .reverse()
-            .reduce((a, b) => ({ path: b, populate: a }))
-        );
-      });
+    // Apply the filter to the aggregation pipeline
+    if (filter && Object.keys(filter).length > 0) {
+      aggregationPipeline.push({ $match: filter });
     }
 
-    docsPromise = docsPromise.exec();
+    // Add sorting to the aggregation pipeline
+    aggregationPipeline.push({ $sort: sort });
 
-    return Promise.all([countPromise, docsPromise]).then((values) => {
-      const [totalResults, results] = values;
-      const totalPages = Math.ceil(totalResults / limit);
-      const result = {
-        results,
-        page,
-        limit,
-        totalPages,
-        totalResults,
-      };
-      return Promise.resolve(result);
+    // Add the facet stage to calculate total count and get paginated results
+    aggregationPipeline.push({
+      $facet: {
+        totalData: [{ $count: 'count' }],
+        data: [{ $skip: skip }, { $limit: limit }],
+      },
     });
+
+    // Execute the aggregation pipeline
+    const aggregationResult = await this.aggregate(aggregationPipeline).exec();
+
+    // Extract the total count and results
+    const totalResults = aggregationResult[0].totalData.length > 0 ? aggregationResult[0].totalData[0].count : 0;
+    const results = aggregationResult[0].data;
+
+    const totalPages = Math.ceil(totalResults / limit);
+
+    const result = {
+      results,
+      page,
+      limit,
+      totalPages,
+      totalResults,
+    };
+    return result;
   };
 };
 

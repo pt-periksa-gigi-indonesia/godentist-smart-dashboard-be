@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { paginate } = require('./plugins');
 
 const doctorSchema = mongoose.Schema({
   id: Number,
@@ -10,6 +11,8 @@ const doctorSchema = mongoose.Schema({
   DoctorWorkSchedule: mongoose.Schema.Types.Mixed,
   DoctorExperience: mongoose.Schema.Types.Mixed,
 });
+
+doctorSchema.plugin(paginate);
 
 /**
  * @typedef Doctor

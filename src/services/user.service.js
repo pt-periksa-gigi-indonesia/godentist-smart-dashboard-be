@@ -24,7 +24,23 @@ const createUser = async (userBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async (filter, options) => {
-  const users = await User.paginate(filter, options);
+  const pipeline = [
+    {
+      $match: {
+        role: { $ne: 'master' }, // Exclude documents with role "master"
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        id: '$_id',
+        name: 1,
+        email: 1,
+        role: 1,
+      },
+    },
+  ];
+  const users = await User.paginate(pipeline, filter, options);
   return users;
 };
 
