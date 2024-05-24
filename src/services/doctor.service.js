@@ -39,6 +39,18 @@ const queryDoctors = async (filter, options) => {
     },
   ];
   const doctors = await Doctor.paginate(pipeline, filter, options);
+  const verificationStatusCount = await DoctorProfile.aggregate([
+    { $match: { verificationStatus: { $in: ['verified', 'unverified'] } } },
+    { $group: { _id: '$verificationStatus', count: { $sum: 1 } } },
+    {
+      $project: {
+        verificationStatus: '$_id',
+        count: 1,
+        _id: 0,
+      },
+    },
+  ]);
+  doctors.verificationStatusCount = verificationStatusCount;
   return doctors;
 };
 
