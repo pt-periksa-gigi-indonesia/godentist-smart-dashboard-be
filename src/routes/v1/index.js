@@ -6,6 +6,7 @@ const seedRoute = require('./seed.route');
 const doctorRoute = require('./doctor.route');
 const clinicRoute = require('./clinic.route');
 const feedbackRoute = require('./feedback.route');
+const dashboardRoute = require('./dashboard.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -34,6 +35,10 @@ const defaultRoutes = [
   {
     path: '/feedbacks',
     route: feedbackRoute,
+  },
+  {
+    path: '/dashboard',
+    route: dashboardRoute,
   },
 ];
 

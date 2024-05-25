@@ -138,10 +138,10 @@ components:
           example: Satu Dental
         totalPatientClinic:
           type: integer
-          example: 43
+          example: 9
         totalAmountClinic:
           type: integer
-          example: 20680000
+          example: 4300000
         clinicDoctorStats:
           type: array
           items:
@@ -149,16 +149,16 @@ components:
             properties:
               idDoctor:
                 type: integer
-                example: 2
+                example: 1
               doctorName:
                 type: string
-                example: drg. Wilson Doe
+                example: drg. John
               doctorSpecialization:
                 type: string
                 example: Ortodontis
               totalPatientDoctor:
                 type: integer
-                example: 40
+                example: 9
         clinicServiceStats:
           type: array
           items:
@@ -166,13 +166,13 @@ components:
             properties:
               serviceName:
                 type: string
-                example: Cabut Gigi
+                example: Veener
               servicePrice:
                 type: integer
-                example: 150000
+                example: 500000
               totalPatientService:
                 type: integer
-                example: 20
+                example: 3
         idClinic:
           type: integer
           example: 2

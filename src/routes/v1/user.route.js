@@ -145,6 +145,16 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ *                 rolesCount:
+ *                   type: array
+ *                   items:
+ *                     properties:
+ *                       count:
+ *                         type: integer
+ *                         example: 7
+ *                       role:
+ *                         type: string
+ *                         example: "user"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

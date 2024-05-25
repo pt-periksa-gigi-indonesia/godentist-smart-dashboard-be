@@ -109,6 +109,9 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ *                 totalClinicFeedbacks:
+ *                   type: integer
+ *                   example: 6
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -193,6 +196,9 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ *                 totalDoctorFeedbacks:
+ *                   type: integer
+ *                   example: 7
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
