@@ -32,8 +32,15 @@ const queryClinicFeedbacks = async (filter, options) => {
     },
   ];
   const clinicFeedbacks = await ClinicFeedback.paginate(pipeline, filter, options);
-  const totalClinicFeedbacks = await ClinicFeedback.countDocuments();
-  clinicFeedbacks.totalClinicFeedbacks = totalClinicFeedbacks;
+  const totalClinicFeedbacks = await ClinicFeedback.aggregate([
+    {
+      $unwind: '$FeedBackClinic',
+    },
+    {
+      $count: 'totalClinicFeedbacks',
+    },
+  ]);
+  clinicFeedbacks.totalClinicFeedbacks = totalClinicFeedbacks[0].totalClinicFeedbacks;
   return clinicFeedbacks;
 };
 
@@ -67,8 +74,15 @@ const queryDoctorFeedbacks = async (filter, options) => {
     },
   ];
   const doctorFeedbacks = await DoctorFeedback.paginate(pipeline, filter, options);
-  const totalDoctorFeedbacks = await DoctorFeedback.countDocuments();
-  doctorFeedbacks.totalDoctorFeedbacks = totalDoctorFeedbacks;
+  const totalDoctorFeedbacks = await DoctorFeedback.aggregate([
+    {
+      $unwind: '$feedBackDoctor',
+    },
+    {
+      $count: 'totalDoctorFeedbacks',
+    },
+  ]);
+  doctorFeedbacks.totalDoctorFeedbacks = totalDoctorFeedbacks[0].totalDoctorFeedbacks;
   return doctorFeedbacks;
 };
 
