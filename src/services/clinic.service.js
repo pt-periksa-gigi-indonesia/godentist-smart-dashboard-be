@@ -81,9 +81,13 @@ const queryClinicHistories = async (filter, options) => {
       },
     },
   ]);
-  clinicHistories.totalTransactions = totalTransactions;
-  clinicHistories.totalAmountTransactions = totalAmountTransactions[0].totalAmount;
-  return clinicHistories;
+  let result = {};
+  result = {
+    ...clinicHistories,
+    totalTransactions,
+    totalAmountTransactions: totalAmountTransactions[0].totalAmount,
+  };
+  return result;
 };
 
 /**
