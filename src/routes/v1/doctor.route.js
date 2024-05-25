@@ -73,7 +73,7 @@ module.exports = router;
  *             schema:
  *               type: object
  *               properties:
- *                 doctors:
+ *                 results:
  *                   type: array
  *                   items:
  *                     properties:
@@ -98,6 +98,16 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ *                 verificationStatusCount:
+ *                   type: array
+ *                   items:
+ *                     properties:
+ *                       count:
+ *                         type: integer
+ *                         example: 2
+ *                       verificationStatus:
+ *                         type: string
+ *                         example: "verified"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

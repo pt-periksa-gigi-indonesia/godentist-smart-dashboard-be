@@ -71,16 +71,22 @@ module.exports = router;
  *             schema:
  *               type: object
  *               properties:
- *                 doctors:
+ *                 results:
  *                   type: array
  *                   items:
  *                     properties:
+ *                       totalAmountTransactions:
+ *                         type: integer
+ *                         example: 4300000
+ *                       totalTransactions:
+ *                         type: integer
+ *                         example: 9
  *                       id:
  *                         type: string
- *                         example: 1
+ *                         example: "2"
  *                       name:
  *                         type: string
- *                         example: "Parakita"
+ *                         example: "Satu Dental"
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -93,6 +99,12 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ *                 totalTransactions:
+ *                   type: integer
+ *                   example: 9
+ *                 totalAmountTransactions:
+ *                   type: integer
+ *                   example: 4300000
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
