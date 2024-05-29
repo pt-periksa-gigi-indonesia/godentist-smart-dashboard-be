@@ -60,6 +60,7 @@ module.exports = {
     consultation: envVars.API_CONSULTATION_URL,
     clinicFeedback: envVars.API_CLINIC_FEEDBACK_URL,
     verifyDoctor: envVars.API_VERIFY_DOCTOR_URL,
+    ocrDoctorCard: envVars.API_OCR_DOCTOR_CARD_URL,
   },
   jwt: {
     secret: envVars.JWT_SECRET,
