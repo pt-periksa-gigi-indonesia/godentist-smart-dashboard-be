@@ -26,8 +26,15 @@ const verifyDoctor = {
   }),
 };
 
+const ocrDoctorCard = {
+  body: Joi.object().keys({
+    doctorId: Joi.number().required(),
+  }),
+};
+
 module.exports = {
   getDoctors,
   getDoctor,
   verifyDoctor,
+  ocrDoctorCard,
 };

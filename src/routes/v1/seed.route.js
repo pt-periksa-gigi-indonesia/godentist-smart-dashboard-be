@@ -1,9 +1,10 @@
 const express = require('express');
+const auth = require('../../middlewares/auth');
 const seed = require('../../controllers/seed.controller');
 
 const router = express.Router();
 
-router.route('/').get(seed.seed);
+router.get('/', auth('admin'), seed.seed);
 
 module.exports = router;
 

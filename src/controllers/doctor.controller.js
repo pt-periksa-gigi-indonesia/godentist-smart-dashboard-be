@@ -19,8 +19,14 @@ const verifyDoctor = catchAsync(async (req, res) => {
   res.send({ message: 'Doctor verification status updated', doctor });
 });
 
+const ocrDoctorCard = catchAsync(async (req, res) => {
+  const doctor = await doctorService.ocrDoctorCard(req.body.doctorId);
+  res.send(doctor);
+});
+
 module.exports = {
   getDoctors,
   getDoctorById,
   verifyDoctor,
+  ocrDoctorCard,
 };
