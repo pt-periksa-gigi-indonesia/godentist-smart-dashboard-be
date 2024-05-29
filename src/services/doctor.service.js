@@ -167,8 +167,41 @@ const verifyDoctor = async (id, verificationStatus) => {
   return doctor;
 };
 
+/**
+ * OCR doctor card
+ * @param {idDoctor} id
+ * @param {string} cardUrl
+ * @returns {Promise<Doctor>}
+ */
+const ocrDoctorCard = async (idDoctor) => {
+  const id = parseInt(idDoctor, 10);
+  const doctor = await DoctorProfile.findOne({ idDoctor: id });
+  if (!doctor) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
+  }
+  try {
+    const data = JSON.stringify({ image_url: doctor.cardUrl });
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: api.ocrDoctorCard,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.response, 'Error when OCR doctor card');
+  }
+};
+
 module.exports = {
   queryDoctors,
   getDoctorById,
   verifyDoctor,
+  ocrDoctorCard,
 };
