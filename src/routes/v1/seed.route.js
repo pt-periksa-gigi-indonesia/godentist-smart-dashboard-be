@@ -23,8 +23,29 @@ module.exports = router;
  *     summary: Refresh database with seed data
  *     description: All users can retrieve this method.
  *     tags: [Seed]
- *     security:
- *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               properties:
+ *                 massage:
+ *                     type: string
+ *                     example: "Database successfully seeded"
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "500":
+ *         $ref: '#/components/responses/InternalError'
+ */
+
+/**
+ * @swagger
+ * /seed/latest:
+ *   get:
+ *     summary: Retrieve the latest seed date
+ *     description: All users can retrieve this method.
+ *     tags: [Seed]
  *     responses:
  *       "200":
  *         description: OK
