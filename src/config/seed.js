@@ -1,20 +1,37 @@
 const { fetchDataFromEndpoints } = require('../services/api.service');
-const { Doctor, DoctorFeedback, DoctorProfile, ClinicHistory, ConsultationHistory, ClinicFeedback } = require('../models');
+const {
+  Doctor,
+  DoctorFeedback,
+  DoctorProfile,
+  ClinicHistory,
+  ConsultationHistory,
+  ClinicFeedback,
+  seedLog,
+} = require('../models');
 const logger = require('./logger');
 
 async function seedDatabase() {
   try {
-    const data = await fetchDataFromEndpoints();
-
-    // Drop collections if they exist
+    // Start fetching data and dropping collections in parallel
+    const dataPromise = fetchDataFromEndpoints();
     const collections = [Doctor, DoctorFeedback, DoctorProfile, ClinicHistory, ConsultationHistory, ClinicFeedback];
-    await Promise.all(
-      collections.map((collection) =>
-        collection.collection.drop().catch((error) => logger.error('Drop collection error:', error))
-      )
+
+    const dropCollections = collections.map((collection) =>
+      collection.collection.drop().catch((error) => {
+        if (error.code === 26) {
+          logger.info(`Collection ${collection.collection.name} does not exist`);
+        } else {
+          logger.error('Drop collection error:', error);
+        }
+      })
     );
 
-    // Insert data
+    await Promise.all(dropCollections);
+
+    // Wait for data fetching to complete
+    const data = await dataPromise;
+
+    // Insert data in parallel
     const insertPromises = [
       Doctor.insertMany(data.doctors),
       DoctorFeedback.insertMany(data.doctorFeedbacks),
@@ -25,8 +42,11 @@ async function seedDatabase() {
     ];
     await Promise.all(insertPromises);
 
+    // Log the seed status
+    await seedLog.create({ status_code: 201, message: 'Database seeded successfully' });
     logger.info('Database seeded successfully');
   } catch (error) {
+    await seedLog.create({ status_code: 500, message: error.message || 'Unknown error' });
     logger.error('Error seeding the database:', error);
   }
 }

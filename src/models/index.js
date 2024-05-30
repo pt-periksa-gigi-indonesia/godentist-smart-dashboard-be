@@ -6,3 +6,4 @@ module.exports.DoctorProfile = require('./doctorProfile.model');
 module.exports.ClinicHistory = require('./clinic.model');
 module.exports.ConsultationHistory = require('./consultation.model');
 module.exports.ClinicFeedback = require('./clinicFeedback.model');
+module.exports.seedLog = require('./seedLog.model');
