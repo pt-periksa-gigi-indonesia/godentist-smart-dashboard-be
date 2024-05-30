@@ -12,7 +12,7 @@ router.get('/:doctorId', auth('admin'), validate(doctorValidation.getDoctor), do
 
 router.patch('/verify/:doctorId', auth('admin'), validate(doctorValidation.verifyDoctor), doctorController.verifyDoctor);
 
-router.post('/ocr', validate(doctorValidation.ocrDoctorCard), doctorController.ocrDoctorCard);
+router.post('/ocr', auth('admin'), validate(doctorValidation.ocrDoctorCard), doctorController.ocrDoctorCard);
 
 module.exports = router;
 
