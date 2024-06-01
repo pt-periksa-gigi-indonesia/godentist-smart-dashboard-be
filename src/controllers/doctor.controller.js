@@ -24,9 +24,15 @@ const ocrDoctorCard = catchAsync(async (req, res) => {
   res.send(doctor);
 });
 
+const ocrDoctorCardDB = catchAsync(async (req, res) => {
+  const doctor = await doctorService.ocrDoctorCardDB(req.body.doctorId);
+  res.send(doctor);
+});
+
 module.exports = {
   getDoctors,
   getDoctorById,
   verifyDoctor,
   ocrDoctorCard,
+  ocrDoctorCardDB,
 };
