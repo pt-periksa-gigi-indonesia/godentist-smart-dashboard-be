@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const axios = require('axios');
-const { Doctor, DoctorProfile } = require('../models');
+const crypto = require('crypto');
+const { Doctor, DoctorProfile, OcrResult } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { api } = require('../config/config');
 
@@ -199,9 +200,92 @@ const ocrDoctorCard = async (idDoctor) => {
   }
 };
 
+const algorithm = 'aes-256-cbc';
+
+const createKey = (name) => {
+  return crypto.createHash('sha256').update(name).digest();
+};
+
+const encrypt = (text, key) => {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return `${iv.toString('hex')}:${encrypted}`;
+};
+
+const decrypt = (encrypted, key) => {
+  const parts = encrypted.split(':');
+  const iv = Buffer.from(parts.shift(), 'hex');
+  const encryptedText = parts.join(':');
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+};
+
+/**
+ * OCR doctor card with database integration
+ * @param {idDoctor} id
+ * @param {string} cardUrl
+ * @returns {Promise<Doctor>}
+ */
+const ocrDoctorCardDB = async (idDoctor) => {
+  const id = parseInt(idDoctor, 10);
+  const doctor = await DoctorProfile.findOne({ idDoctor: id });
+  if (!doctor) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
+  }
+
+  const key = createKey(doctor.doctorName);
+
+  let ocr = await OcrResult.findOne({ idDoctor: id });
+  if (ocr) {
+    return JSON.parse(decrypt(ocr.encryptedData, key));
+  }
+
+  try {
+    const data = JSON.stringify({ image_url: doctor.cardUrl });
+
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: api.ocrDoctorCard,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    const response = await axios.request(config);
+    const ocrData = response.data;
+
+    const dataToEncrypt = JSON.stringify({
+      nama: ocrData.NAMA,
+      nik: ocrData.NIK,
+      tempatTanggalLahir: ocrData['Tempat Tanggal Lahir'],
+      alamat: ocrData.ALAMAT,
+      jenisKelamin: ocrData['JENIS KELAMIN'],
+    });
+
+    const encryptedData = encrypt(dataToEncrypt, key);
+
+    ocr = new OcrResult({
+      idDoctor: id,
+      encryptedData,
+    });
+    await ocr.save();
+
+    return JSON.parse(decrypt(encryptedData, key));
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error when OCR doctor card', error.response);
+  }
+};
+
 module.exports = {
   queryDoctors,
   getDoctorById,
   verifyDoctor,
   ocrDoctorCard,
+  ocrDoctorCardDB,
 };

@@ -32,9 +32,16 @@ const ocrDoctorCard = {
   }),
 };
 
+const ocrDoctorCardDB = {
+  body: Joi.object().keys({
+    doctorId: Joi.number().required(),
+  }),
+};
+
 module.exports = {
   getDoctors,
   getDoctor,
   verifyDoctor,
   ocrDoctorCard,
+  ocrDoctorCardDB,
 };

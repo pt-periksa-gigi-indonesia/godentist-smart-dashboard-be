@@ -12,7 +12,9 @@ router.get('/:doctorId', auth('admin'), validate(doctorValidation.getDoctor), do
 
 router.patch('/verify/:doctorId', auth('admin'), validate(doctorValidation.verifyDoctor), doctorController.verifyDoctor);
 
-router.post('/ocr', auth('admin'), validate(doctorValidation.ocrDoctorCard), doctorController.ocrDoctorCard);
+router.post('/ocr-card', auth('admin'), validate(doctorValidation.ocrDoctorCard), doctorController.ocrDoctorCard);
+
+router.post('/ocr', auth('admin'), validate(doctorValidation.ocrDoctorCardDB), doctorController.ocrDoctorCardDB);
 
 module.exports = router;
 
@@ -196,6 +198,56 @@ module.exports = router;
 /**
  * @swagger
  * /doctors/ocr:
+ *   post:
+ *     summary: OCR doctor card using database integration
+ *     description: Only admins can retrieve a OCR doctor card.
+ *     tags: [Doctor]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       description: Doctor ID
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               doctorId:
+ *                 type: number
+ *                 example: 1
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 NAMA:
+ *                   type: string
+ *                   example: "RIYANTO, SE"
+ *                 NIK:
+ *                   type: string
+ *                   example: "3471140209790101"
+ *                 Tempat Tanggal Lahir:
+ *                   type: string
+ *                   example: "GROBOGAN, 02091979"
+ *                 ALAMAT:
+ *                   type: string
+ *                   example: "PAM PURI DOMAS D3 SEMPU\no. 91"
+ *                 JENIS KELAMIN:
+ *                   type: string
+ *                   example: "LAKI-LAKI"
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /doctors/ocr-card:
  *   post:
  *     summary: OCR doctor card
  *     description: Only admins can retrieve a OCR doctor card.
