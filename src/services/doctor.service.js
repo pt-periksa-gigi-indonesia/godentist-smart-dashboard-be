@@ -194,7 +194,14 @@ const ocrDoctorCard = async (idDoctor) => {
     };
 
     const response = await axios.request(config);
-    return response.data;
+    const dataResponse = {
+      nama: response.data.NAMA,
+      nik: response.data.NIK,
+      tempatTanggalLahir: response.data['Tempat Tanggal Lahir'],
+      alamat: response.data.ALAMAT,
+      jenisKelamin: response.data['JENIS KELAMIN'],
+    };
+    return dataResponse;
   } catch (error) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.response, 'Error when OCR doctor card');
   }
