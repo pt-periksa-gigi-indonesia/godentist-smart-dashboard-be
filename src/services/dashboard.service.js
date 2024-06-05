@@ -24,7 +24,13 @@ const getDashboardData = async () => {
     {
       $project: {
         totalAmount: {
-          $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0],
+          $cond: {
+            if: {
+              $gt: [{ $size: { $ifNull: ['$midtransResponse.payment_amounts', []] } }, 0],
+            },
+            then: { $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0] },
+            else: '$serviceDetails.amount',
+          },
         },
       },
     },
@@ -32,9 +38,7 @@ const getDashboardData = async () => {
       $group: {
         _id: null,
         totalAmount: {
-          $sum: {
-            $toDouble: '$totalAmount',
-          },
+          $sum: { $toDouble: '$totalAmount' },
         },
       },
     },
@@ -138,26 +142,28 @@ const getDashboardData = async () => {
       },
     },
     {
-      $project: {
-        paidAt: {
-          $arrayElemAt: ['$midtransResponse.payment_amounts.paid_at', 0],
-        },
+      $addFields: {
         amount: {
-          $toDouble: {
-            $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0],
+          $cond: {
+            if: {
+              $gt: [{ $size: { $ifNull: ['$midtransResponse.payment_amounts', []] } }, 0],
+            },
+            then: { $toDouble: { $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0] } },
+            else: { $toDouble: '$serviceDetails.amount' },
           },
         },
       },
     },
     {
       $project: {
+        createdAt: 1,
+        amount: 1,
+      },
+    },
+    {
+      $project: {
         month: {
-          $month: {
-            $dateFromString: {
-              dateString: '$paidAt',
-              format: '%Y-%m-%d %H:%M:%S',
-            },
-          },
+          $month: '$createdAt',
         },
         amount: 1,
       },

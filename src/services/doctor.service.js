@@ -33,9 +33,6 @@ const queryDoctors = async (filter, options) => {
         id: '$id',
         name: '$name',
         verificationStatus: '$profile.verificationStatus',
-        // detailDoctorURL: {
-        //   $concat: ['http://localhost:3000/v1/doctors/', { $toString: '$id' }],
-        // },
       },
     },
   ];
@@ -93,18 +90,7 @@ const getDoctorById = async (id) => {
       },
     },
     {
-      $lookup: {
-        from: 'doctorfeedbacks',
-        localField: 'id',
-        foreignField: 'id',
-        as: 'feedbacks',
-      },
-    },
-    {
       $unwind: '$profile',
-    },
-    {
-      $unwind: '$feedbacks',
     },
     {
       $project: {
@@ -114,7 +100,6 @@ const getDoctorById = async (id) => {
         specialization: 1,
         workPlace: 1,
         consultationPrice: 1,
-        feedback: '$feedbacks.feedBackDoctor',
         cardUrl: '$profile.cardUrl',
         verificationStatus: '$profile.verificationStatus',
         DoctorWorkSchedule: 1,
@@ -125,7 +110,13 @@ const getDoctorById = async (id) => {
           $sum: {
             $map: {
               input: '$clinichistories',
-              in: { $toDouble: { $arrayElemAt: ['$$this.midtransResponse.payment_amounts.amount', 0] } },
+              in: {
+                $cond: {
+                  if: { $gt: [{ $size: { $ifNull: ['$$this.midtransResponse.payment_amounts', []] } }, 0] },
+                  then: { $toDouble: { $arrayElemAt: ['$$this.midtransResponse.payment_amounts.amount', 0] } },
+                  else: '$$this.serviceDetails.amount',
+                },
+              },
             },
           },
         },

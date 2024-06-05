@@ -25,9 +25,16 @@ const queryClinicHistories = async (filter, options) => {
       },
     },
     {
-      $unwind: {
-        path: '$transactions.midtransResponse.payment_amounts',
-        preserveNullAndEmptyArrays: true,
+      $addFields: {
+        'transactions.amount': {
+          $cond: {
+            if: {
+              $gt: [{ $size: { $ifNull: ['$transactions.midtransResponse.payment_amounts', []] } }, 0],
+            },
+            then: { $arrayElemAt: ['$transactions.midtransResponse.payment_amounts.amount', 0] },
+            else: '$transactions.serviceDetails.amount',
+          },
+        },
       },
     },
     {
@@ -37,7 +44,7 @@ const queryClinicHistories = async (filter, options) => {
           name: '$name',
         },
         totalAmountTransactions: {
-          $sum: { $toDouble: '$transactions.midtransResponse.payment_amounts.amount' },
+          $sum: { $toDouble: '$transactions.amount' },
         },
         totalTransactions: {
           $sum: 1,
@@ -60,7 +67,13 @@ const queryClinicHistories = async (filter, options) => {
     {
       $project: {
         totalAmount: {
-          $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0],
+          $cond: {
+            if: {
+              $gt: [{ $size: { $ifNull: ['$midtransResponse.payment_amounts', []] } }, 0],
+            },
+            then: { $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0] },
+            else: '$serviceDetails.amount',
+          },
         },
       },
     },
@@ -68,9 +81,7 @@ const queryClinicHistories = async (filter, options) => {
       $group: {
         _id: null,
         totalAmount: {
-          $sum: {
-            $toDouble: '$totalAmount',
-          },
+          $sum: { $toDouble: '$totalAmount' },
         },
       },
     },
@@ -104,6 +115,19 @@ const getClinicById = async (id) => {
       },
     },
     {
+      $addFields: {
+        totalAmount: {
+          $cond: {
+            if: {
+              $gt: [{ $size: { $ifNull: ['$midtransResponse.payment_amounts', []] } }, 0],
+            },
+            then: { $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0] },
+            else: '$serviceDetails.amount',
+          },
+        },
+      },
+    },
+    {
       $group: {
         _id: {
           idClinic: '$serviceDetails.idClinic',
@@ -119,9 +143,7 @@ const getClinicById = async (id) => {
         totalPatients: { $sum: 1 },
         totalAmount: {
           $sum: {
-            $toDouble: {
-              $arrayElemAt: ['$midtransResponse.payment_amounts.amount', 0],
-            },
+            $toDouble: '$totalAmount',
           },
         },
       },
@@ -156,14 +178,6 @@ const getClinicById = async (id) => {
       },
     },
     {
-      $lookup: {
-        from: 'clinicfeedbacks',
-        localField: '_id',
-        foreignField: 'id',
-        as: 'clinicFeedback',
-      },
-    },
-    {
       $project: {
         _id: 0,
         idClinic: '$_id',
@@ -172,7 +186,6 @@ const getClinicById = async (id) => {
         totalAmountClinic: 1,
         clinicDoctorStats: 1,
         clinicServiceStats: 1,
-        clinicFeedback: '$clinicFeedback.FeedBackClinic',
       },
     },
     {
