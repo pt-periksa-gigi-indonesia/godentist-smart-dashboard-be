@@ -96,21 +96,6 @@ components:
               description:
                 type: string
                 example: "RS. Djoko Diningrat"
-        feedback:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 2
-              message:
-                type: string
-                example: "ini feedback pertama dr john doe"
-              createdAt:
-                type: string
-                format: date-time
-                example: "2024-05-14T13:30:12.636Z"
         cardUrl:
           type: string
           example: "https://storage.googleapis.com/godentist-dev/doctor/doctor-idcard-Fri May 10 2024 06:33:30 GMT+0000 (Coordinated Universal Time)"
@@ -176,23 +161,6 @@ components:
         idClinic:
           type: integer
           example: 2
-        clinicFeedback:
-          type: array
-          items:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  example: 1
-                message:
-                  type: string
-                  example: Ini feedback ke 2
-                createdAt:
-                  type: string
-                  format: date-time
-                  example: "2024-05-14T13:23:24.055Z"
 
     Error:
       type: object
