@@ -39,10 +39,10 @@ module.exports = router;
  *                     properties:
  *                       count:
  *                         type: integer
- *                         example: 1
+ *                         example: 2
  *                       verificationStatus:
  *                         type: string
- *                         example: verified
+ *                         example: unverified
  *                 clinicCount:
  *                   type: integer
  *                   example: 5

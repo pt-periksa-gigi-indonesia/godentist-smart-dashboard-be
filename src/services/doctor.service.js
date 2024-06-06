@@ -280,10 +280,48 @@ const ocrDoctorCardDB = async (idDoctor) => {
   }
 };
 
+/**
+ * OCR doctor card with database integration
+ * @param {idDoctor} id
+ * @param {string} newData
+ * @returns {Promise<Doctor>}
+ */
+const editOcrDoctorCard = async (idDoctor, newData) => {
+  const id = parseInt(idDoctor, 10);
+  const doctor = await DoctorProfile.findOne({ idDoctor: id });
+  if (!doctor) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Doctor not found');
+  }
+  try {
+    const key = createKey(doctor.doctorName);
+
+    const ocr = await OcrResult.findOne({ idDoctor });
+    if (!ocr) {
+      throw new Error('OCR data not found for the provided doctor ID.');
+    }
+
+    const decryptedData = decrypt(ocr.encryptedData, key);
+
+    const parsedData = JSON.parse(decryptedData);
+
+    Object.assign(parsedData, newData);
+
+    const reEncryptedData = encrypt(JSON.stringify(parsedData), key);
+
+    ocr.encryptedData = reEncryptedData;
+    await ocr.save();
+
+    return parsedData;
+  } catch (error) {
+    throw new Error(`Error editing encrypted OCR data: ${error.message}`);
+  }
+};
+
 module.exports = {
   queryDoctors,
   getDoctorById,
   verifyDoctor,
   ocrDoctorCard,
   ocrDoctorCardDB,
+  editOcrDoctorCard,
 };

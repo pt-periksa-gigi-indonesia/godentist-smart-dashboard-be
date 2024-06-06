@@ -29,10 +29,17 @@ const ocrDoctorCardDB = catchAsync(async (req, res) => {
   res.send(doctor);
 });
 
+const editOcrDoctorCard = catchAsync(async (req, res) => {
+  const { doctorId, ...newData } = req.body;
+  const doctor = await doctorService.editOcrDoctorCard(doctorId, newData);
+  res.send(doctor);
+});
+
 module.exports = {
   getDoctors,
   getDoctorById,
   verifyDoctor,
   ocrDoctorCard,
   ocrDoctorCardDB,
+  editOcrDoctorCard,
 };

@@ -229,25 +229,23 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 results:
- *                   type: array
- *                   items:
- *                     properties:
- *                       id:
- *                         type: string
- *                         example: 2
- *                       name:
- *                         type: string
- *                         example: "Satu Dental"
- *                       feedback:
- *                         type: string
- *                         example: "Ini feedback ke 2"
- *                       createdAt:
- *                         type: string
- *                         format: date-time
- *                         example: "2024-05-14T13:23:24.055Z"
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: 2
+ *                   name:
+ *                     type: string
+ *                     example: "Satu Dental"
+ *                   feedback:
+ *                     type: string
+ *                     example: "Ini feedback ke 2"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-05-14T13:23:24.055Z"
  *
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
@@ -279,25 +277,23 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 results:
- *                   type: array
- *                   items:
- *                     properties:
- *                       id:
- *                         type: string
- *                         example: 1
- *                       name:
- *                         type: string
- *                         example: "drg. John"
- *                       feedback:
- *                         type: string
- *                         example: "ini feedback pertama dr john doe"
- *                       createdAt:
- *                         type: string
- *                         format: date-time
- *                         example: "2024-05-14T13:30:12.636Z"
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "drg. John"
+ *                   feedback:
+ *                     type: string
+ *                     example: "ini feedback pertama dr john doe"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-05-14T13:30:12.636Z"
  *
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'

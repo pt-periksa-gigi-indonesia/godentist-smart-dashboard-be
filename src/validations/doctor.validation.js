@@ -38,10 +38,22 @@ const ocrDoctorCardDB = {
   }),
 };
 
+const editOcrDoctorCard = {
+  body: Joi.object().keys({
+    doctorId: Joi.number().required(),
+    nama: Joi.string(),
+    nik: Joi.string(),
+    tempatTanggalLahir: Joi.string(),
+    alamat: Joi.string(),
+    jenisKelamin: Joi.string(),
+  }),
+};
+
 module.exports = {
   getDoctors,
   getDoctor,
   verifyDoctor,
   ocrDoctorCard,
   ocrDoctorCardDB,
+  editOcrDoctorCard,
 };

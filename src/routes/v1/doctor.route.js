@@ -16,6 +16,8 @@ router.post('/ocr-card', auth('admin'), validate(doctorValidation.ocrDoctorCard)
 
 router.post('/ocr', auth('admin'), validate(doctorValidation.ocrDoctorCardDB), doctorController.ocrDoctorCardDB);
 
+router.post('/edit-ocr', auth('admin'), validate(doctorValidation.editOcrDoctorCard), doctorController.editOcrDoctorCard);
+
 module.exports = router;
 
 /**
@@ -111,7 +113,7 @@ module.exports = router;
  *                         example: 2
  *                       verificationStatus:
  *                         type: string
- *                         example: "verified"
+ *                         example: "unverified"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -264,6 +266,62 @@ module.exports = router;
  *               doctorId:
  *                 type: number
  *                 example: 1
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 NAMA:
+ *                   type: string
+ *                   example: "RIYANTO, SE"
+ *                 NIK:
+ *                   type: string
+ *                   example: "3471140209790101"
+ *                 Tempat Tanggal Lahir:
+ *                   type: string
+ *                   example: "GROBOGAN, 02091979"
+ *                 ALAMAT:
+ *                   type: string
+ *                   example: "PAM PURI DOMAS D3 SEMPU\no. 91"
+ *                 JENIS KELAMIN:
+ *                   type: string
+ *                   example: "LAKI-LAKI"
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /doctors/edit-ocr:
+ *   post:
+ *     summary: OCR doctor card
+ *     description: Only admins can edit OCR card and you can put another request body, like nama, nik, or jenisKelamin (optional) just put the variable you want to changes.
+ *     tags: [Doctor]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       description: Doctor ID
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               doctorId:
+ *                 type: number
+ *                 example: 1
+ *               nama:
+ *                 type: string
+ *                 example: "RIYANTO, SE"
+ *               jenisKelamin:
+ *                 type: string
+ *                 example: "LAKI-LAKI"
  *     responses:
  *       "200":
  *         description: OK
