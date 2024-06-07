@@ -59,7 +59,7 @@ const queryDoctors = async (filter, options) => {
  */
 const getDoctorById = async (id) => {
   const doctorId = parseInt(id, 10);
-  const doctor = Doctor.aggregate([
+  const doctor = await Doctor.aggregate([
     {
       $match: {
         id: doctorId,
@@ -104,30 +104,115 @@ const getDoctorById = async (id) => {
         verificationStatus: '$profile.verificationStatus',
         DoctorWorkSchedule: 1,
         DoctorExperience: 1,
-        clinicPatientsCount: { $size: '$clinichistories' },
-        consultationPatientsCount: { $size: '$consultationhistories' },
-        totalAmountFromClinic: {
-          $sum: {
-            $map: {
-              input: '$clinichistories',
-              in: {
+        clinicHistories: {
+          $map: {
+            input: '$clinichistories',
+            as: 'clinicHistory',
+            in: {
+              month: {
+                $dateToString: {
+                  format: '%Y-%m',
+                  date: '$$clinicHistory.createdAt',
+                },
+              },
+              amount: {
                 $cond: {
-                  if: { $gt: [{ $size: { $ifNull: ['$$this.midtransResponse.payment_amounts', []] } }, 0] },
-                  then: { $toDouble: { $arrayElemAt: ['$$this.midtransResponse.payment_amounts.amount', 0] } },
-                  else: '$$this.serviceDetails.amount',
+                  if: {
+                    $gt: [{ $size: { $ifNull: ['$$clinicHistory.midtransResponse.payment_amounts', []] } }, 0],
+                  },
+                  then: { $toDouble: { $arrayElemAt: ['$$clinicHistory.midtransResponse.payment_amounts.amount', 0] } },
+                  else: '$$clinicHistory.serviceDetails.amount',
                 },
               },
             },
           },
         },
-        totalAmountFromConsultation: {
-          $sum: {
-            $map: {
-              input: '$consultationhistories',
-              in: { $toDouble: { $arrayElemAt: ['$$this.midtransResponse.payment_amounts.amount', 0] } },
+        consultationHistories: {
+          $map: {
+            input: '$consultationhistories',
+            as: 'consultationHistory',
+            in: {
+              month: {
+                $dateToString: {
+                  format: '%Y-%m',
+                  date: '$$consultationHistory.createdAt',
+                },
+              },
+              amount: { $toDouble: { $arrayElemAt: ['$$consultationHistory.midtransResponse.payment_amounts.amount', 0] } },
             },
           },
         },
+      },
+    },
+    {
+      $unwind: {
+        path: '$clinicHistories',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $unwind: {
+        path: '$consultationHistories',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          id: '$id',
+          name: '$name',
+          specialization: '$specialization',
+          workPlace: '$workPlace',
+          consultationPrice: '$consultationPrice',
+          cardUrl: '$cardUrl',
+          verificationStatus: '$verificationStatus',
+          DoctorWorkSchedule: '$DoctorWorkSchedule',
+          DoctorExperience: '$DoctorExperience',
+          month: { $ifNull: ['$clinicHistories.month', '$consultationHistories.month'] },
+        },
+        clinicPatientsCount: { $sum: { $cond: [{ $ifNull: ['$clinicHistories.month', false] }, 1, 0] } },
+        consultationPatientsCount: { $sum: { $cond: [{ $ifNull: ['$consultationHistories.month', false] }, 1, 0] } },
+        totalAmountFromClinic: { $sum: { $ifNull: ['$clinicHistories.amount', 0] } },
+        totalAmountFromConsultation: { $sum: { $ifNull: ['$consultationHistories.amount', 0] } },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          id: '$_id.id',
+          name: '$_id.name',
+          specialization: '$_id.specialization',
+          workPlace: '$_id.workPlace',
+          consultationPrice: '$_id.consultationPrice',
+          cardUrl: '$_id.cardUrl',
+          verificationStatus: '$_id.verificationStatus',
+          DoctorWorkSchedule: '$_id.DoctorWorkSchedule',
+          DoctorExperience: '$_id.DoctorExperience',
+        },
+        doctorStats: {
+          $push: {
+            month: '$_id.month',
+            clinicPatientsCount: '$clinicPatientsCount',
+            consultationPatientsCount: '$consultationPatientsCount',
+            totalAmountFromClinic: '$totalAmountFromClinic',
+            totalAmountFromConsultation: '$totalAmountFromConsultation',
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        id: '$_id.id',
+        name: '$_id.name',
+        specialization: '$_id.specialization',
+        workPlace: '$_id.workPlace',
+        consultationPrice: '$_id.consultationPrice',
+        cardUrl: '$_id.cardUrl',
+        verificationStatus: '$_id.verificationStatus',
+        DoctorWorkSchedule: '$_id.DoctorWorkSchedule',
+        DoctorExperience: '$_id.DoctorExperience',
+        doctorStats: 1,
       },
     },
   ]);
