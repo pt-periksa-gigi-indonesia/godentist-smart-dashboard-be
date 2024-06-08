@@ -9,6 +9,7 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
+    EMAIL_SECRET: Joi.string().required().description('Email secret key'),
     API_KEY: Joi.string().required().description('API key'),
     API_DOCTOR_URL: Joi.string().required().description('Doctor API url'),
     API_FEEDBACK_URL: Joi.string().required().description('Feedback API url'),
@@ -51,6 +52,7 @@ module.exports = {
       useUnifiedTopology: true,
     },
   },
+  emailSecret: envVars.EMAIL_SECRET,
   api: {
     key: envVars.API_KEY,
     doctor: envVars.API_DOCTOR_URL,

@@ -1,8 +1,24 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const { emailSecret } = require('../config/config');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+
+function encrypt(text) {
+  const cipher = crypto.createCipher('aes-256-cbc', emailSecret);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
+
+function decrypt(text) {
+  const decipher = crypto.createDecipher('aes-256-cbc', emailSecret);
+  let decrypted = decipher.update(text, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
 
 const userSchema = mongoose.Schema(
   {
@@ -18,10 +34,12 @@ const userSchema = mongoose.Schema(
       trim: true,
       lowercase: true,
       validate(value) {
-        if (!validator.isEmail(value)) {
+        if (!validator.isEmail(decrypt(value))) {
           throw new Error('Invalid email');
         }
       },
+      set: encrypt,
+      get: decrypt,
     },
     password: {
       type: String,
@@ -47,6 +65,7 @@ const userSchema = mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { getters: true }, // agar getter untuk dekripsi dijalankan
   }
 );
 

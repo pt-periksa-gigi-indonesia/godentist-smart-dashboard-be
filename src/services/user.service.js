@@ -1,6 +1,15 @@
 const httpStatus = require('http-status');
+const crypto = require('crypto');
+const { emailSecret } = require('../config/config');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+
+function decrypt(text) {
+  const decipher = crypto.createDecipher('aes-256-cbc', emailSecret);
+  let decrypted = decipher.update(text, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
 
 /**
  * Create a user
@@ -40,7 +49,16 @@ const queryUsers = async (filter, options) => {
       },
     },
   ];
+
+  // Run the query
   const users = await User.paginate(pipeline, filter, options);
+
+  // Decrypt email for each user
+  const decryptedUsers = users.results.map((user) => ({
+    ...user,
+    email: decrypt(user.email),
+  }));
+
   const rolesCount = await User.aggregate([
     { $match: { role: { $in: ['user', 'admin'] } } },
     { $group: { _id: '$role', count: { $sum: 1 } } },
@@ -52,8 +70,16 @@ const queryUsers = async (filter, options) => {
       },
     },
   ]);
-  users.rolesCount = rolesCount;
-  return users;
+
+  // Return the formatted result
+  return {
+    results: decryptedUsers,
+    page: users.page,
+    limit: users.limit,
+    totalPages: users.totalPages,
+    totalResults: users.totalResults,
+    rolesCount,
+  };
 };
 
 /**
