@@ -5,7 +5,8 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 function decrypt(text) {
-  const decipher = crypto.createDecipher('aes-256-cbc', emailSecret);
+  const keyBuffer = Buffer.from(emailSecret, 'hex');
+  const decipher = crypto.createDecipheriv('aes-256-cbc', keyBuffer, Buffer.alloc(16));
   let decrypted = decipher.update(text, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
