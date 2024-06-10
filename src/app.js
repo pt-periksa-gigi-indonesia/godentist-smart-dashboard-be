@@ -15,6 +15,21 @@ const ApiError = require('./utils/ApiError');
 
 const app = express();
 
+const allowedDomains = [
+  'https://swagger-pwa-godentist-qlarjzkb3q-et.a.run.app',
+  'https://capstone-godentist.et.r.appspot.com',
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedDomains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new ApiError(httpStatus.FORBIDDEN, 'Access denied'));
+    }
+  },
+};
+
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
@@ -35,9 +50,9 @@ app.use(mongoSanitize());
 // gzip compression
 app.use(compression());
 
-// enable cors
-app.use(cors());
-app.options('*', cors());
+// enable cors with the specified options
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // jwt authentication
 app.use(passport.initialize());

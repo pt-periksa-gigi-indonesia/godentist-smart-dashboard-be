@@ -15,4 +15,4 @@ COPY --chown=node:node . .
 EXPOSE 465
 EXPOSE 80
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
