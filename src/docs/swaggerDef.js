@@ -12,7 +12,7 @@ const swaggerDef = {
   },
   servers: [
     {
-      url: `https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1`,
+      url: `https://swagger-pwa-godentist-qlarjzkb3q-et.a.run.app/v1`,
     },
   ],
 };
