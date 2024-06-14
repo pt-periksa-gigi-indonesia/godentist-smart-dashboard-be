@@ -530,6 +530,19 @@ List of available routes:
     ```
 </details><br>
 
+## Model Deployment using Compute Engine
+
+This section provides an overview of the deployment setup for the OCR model using Google Cloud Compute Engine. The deployment leverages a virtual machine instance specifically configured to optimize the performance and reliability of the OCR model in a production environment.
+
+### VM Instance Specification
+
+- **Name:** ocr-model
+- **Zone:** asia-southeast2-c
+- **Machine Type:** e2-medium
+- **CPU Platform:** Intel Broadwell
+- **Architecture:** x86/64
+- **GPUs:** None
+
 ## Linting
 
 Linting is done using [ESLint](https://eslint.org/) and [Prettier](https://prettier.io).
