@@ -120,6 +120,9 @@ PORT=3000
 # URL of the Mongo DB
 MONGODB_URL=mongodb://127.0.0.1:27017/node-boilerplate
 
+# Secret key for email
+EMAIL_SECRET=email_secret
+
 # API keys and secrets
 API_KEY='your_api_key_here'
 
@@ -130,6 +133,11 @@ API_FEEDBACK_URL='api_feedback_url_here'
 API_PROFILE_URL='api_profile_url_here'
 API_CLINIC_URL='api_clinic_url_here'
 API_CONSULTATION_URL='api_consultation_url_here'
+API_CLINIC_FEEDBACK_URL='api_clinic_feedback_url_here'
+API_VERIFY_DOCTOR_URL='api_verify_doctor_url_here'
+
+# URL FOR OCR DOCTOR CARD
+API_OCR_DOCTOR_CARD_URL='api_url_ocr_here'
 
 # JWT
 # JWT secret key
@@ -171,10 +179,12 @@ src\
 
 ## API Documentation
 
+<details markdown=span>
+
 **Base URL:**
 > https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/
 
-In this section there is a Collection API for this project that can be used to be main foundation of our dashboard. Response from each URL using JSON format. For further documentation and parameter can be used for each endpoint, please seek for this link [Swagger API Documentation](https://capstone-godentist-pwa-qlarjzkb3q-et.a.run.app/v1/docs) and if you running this project locally, you can access documentation in ```http://localhost:3000/v1/docs/```
+In this section there is a Collection API for this project that can be used to be main foundation of our dashboard. Response from each URL using JSON format. For further documentation and parameter can be used for each endpoint, please seek for this link [Swagger API Documentation](https://swagger-pwa-godentist-qlarjzkb3q-et.a.run.app/v1/docs/) or [Postman API Documentation](https://documenter.getpostman.com/view/34639993/2sA3XPE3N4) and if you running this project locally, you can access documentation in ```http://localhost:3000/v1/docs/```
 
 ### API Endpoints
 
@@ -518,6 +528,20 @@ List of available routes:
     "role": "user"
     }
     ```
+</details><br>
+
+## Model Deployment using Compute Engine
+
+This section provides an overview of the deployment setup for the OCR model using Google Cloud Compute Engine. The deployment leverages a virtual machine instance specifically configured to optimize the performance and reliability of the OCR model in a production environment.
+
+### VM Instance Specification
+
+- **Name:** ocr-model
+- **Zone:** asia-southeast2-c
+- **Machine Type:** e2-medium
+- **CPU Platform:** Intel Broadwell
+- **Architecture:** x86/64
+- **GPUs:** None
 
 ## Linting
 
